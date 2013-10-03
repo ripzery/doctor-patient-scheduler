@@ -24,7 +24,7 @@ public class Startup extends JFrame{
     private JButton b1;
     private JComboBox combo;
     private JTextField name;
-    private Object main;
+    private Main main;
     public Startup(){
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
@@ -100,12 +100,11 @@ public class Startup extends JFrame{
     }
     
     public void throwName(){     
-        Main a = (Main)main;
-        a.setVisible(true);
-        a.setName(name.getText());
+        main.setVisible(true);
+        main.setName(name.getText());
    }
     public void setMain(Object main){
-        this.main = main;        
+        this.main = (Main)main;        
     }
 
 }
