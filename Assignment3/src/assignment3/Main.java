@@ -5,6 +5,8 @@
 package assignment3;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
@@ -14,15 +16,14 @@ import net.miginfocom.swing.MigLayout;
  */
 public class Main extends JFrame {
     
-    private Startup startup;
+    private static Startup startup;
     private int width=800,height=600;
     private String name;
     private JPanel main;
     private JLabel lhead;
     
-    public Main(){        
-        startup = new Startup();
-        startup.setMain(this);
+    public Main(String name){        
+        this.setDoctorName(name);
         
         addComponent();
         addListener();
@@ -30,11 +31,11 @@ public class Main extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(320,70,width,height);
         getContentPane().setBackground(new Color(0xff,0xf0,0xa5));
+        setVisible(true);
     }
     
     public static void main(String args[]){       
-       
-          new Main();
+          startup = new Startup();
     }
     private void addComponent(){
         Font f = new Font("Arial",Font.BOLD,36);        
@@ -54,10 +55,9 @@ public class Main extends JFrame {
         
     }
     
-    @Override
-      public void setName(String s){
-        name = s;
-        setTitle("Doctor "+name+" 's scheduler");
-        startup.dispose();
+    public final void setDoctorName(String s){
+      name = s;
+      setTitle("Doctor "+name+" 's scheduler");
+      startup.dispose();
     }    
 }
