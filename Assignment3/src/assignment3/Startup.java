@@ -39,7 +39,7 @@ public class Startup extends JFrame{
         addListener();
         
         setVisible(true);
-        setTitle("Doctor-patients Scheduler");
+        setTitle("Doctor-Patients Scheduler");
     
     }
     
@@ -48,7 +48,7 @@ public class Startup extends JFrame{
         name = new JTextField();
         l3 = new JLabel("Enter your name: ");
         l2 = new JLabel("Or choose exists name:");
-        l1 = new JLabel("Doctor-patients Scheduler");
+        l1 = new JLabel("Doctor-Patients Scheduler");
         b1 = new JButton("GO!");
         combo = new JComboBox();
         combo.addItem("TEST1");
@@ -57,18 +57,18 @@ public class Startup extends JFrame{
         name.setFocusable(true);
         name.setFont(new Font("Arial",Font.BOLD,40));
         combo.setFont(new Font("Arial",Font.BOLD,20));  
+        
         Font f = new Font("Arial",Font.BOLD,23);  
         l1.setFont(f);
         l2.setFont(f);
         l3.setFont(f);
         b1.setFont(f);
             
-        
         pstart.add(l1,"gapright 30%, gapleft 30%, width 50%,wrap 110px");
         pstart.add(l3,"gapright 20%, gapleft 20%, width 70%,wrap 10px");
-        pstart.add(name,"gapright 20%, gapleft 20%, width 70%,wrap 120px");
-        pstart.add(l2,"gapleft 10%");
-        pstart.add(combo,"pos 350px 405px");              
+        pstart.add(name,"gapright 20%, gapleft 20%, width 70%,wrap 80px");
+        pstart.add(l2,"gapleft 20%,id l3");
+        pstart.add(combo,"pos l3.x2+20 l3.y");              
         
         pstart.add(b1,"pos 650px 490px");
     }
@@ -78,10 +78,7 @@ public class Startup extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e){
                 if(name.getText().equals("")){
-                    JOptionPane.showMessageDialog(pstart,
-                    "Please enter/choose your name !",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);                    
+                    JOptionPane.showMessageDialog(pstart,"Please enter/choose your name !","Error",JOptionPane.ERROR_MESSAGE);                    
                 }
                 
                 else throwName();
@@ -90,7 +87,10 @@ public class Startup extends JFrame{
         name.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e){
-                if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                if(name.getText().equals("")&&e.getKeyCode()==KeyEvent.VK_ENTER){
+                    JOptionPane.showMessageDialog(pstart,"Please enter/choose your name !","Error",JOptionPane.ERROR_MESSAGE);   
+                }
+                else if(e.getKeyCode()==KeyEvent.VK_ENTER){
                     throwName();
                 }
             }
