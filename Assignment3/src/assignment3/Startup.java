@@ -6,6 +6,11 @@ package assignment3;
 
 import net.miginfocom.swing.MigLayout;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import javax.swing.*;
 import javax.swing.border.Border;
 
@@ -15,11 +20,11 @@ import javax.swing.border.Border;
  */
 public class Startup extends JFrame{
     private JPanel pstart;
-    private JLabel l1,l2;
+    private JLabel l1,l2,l3;
     private JButton b1;
     private JComboBox combo;
-    private JTextField text1;
-    private Main main;
+    private JTextField name;
+    private Object main;
     public Startup(){
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
@@ -40,23 +45,28 @@ public class Startup extends JFrame{
     
     private void addComponents(){
     
-        text1 = new JTextField("Create your profile");
+        name = new JTextField();
+        l3 = new JLabel("Enter your name: ");
         l2 = new JLabel("Or choose exists name:");
         l1 = new JLabel("Doctor-patients Scheduler");
         b1 = new JButton("GO!");
         combo = new JComboBox();
-        combo.addItem("TEXXXXT");
-        Font f = new Font("Arial",Font.BOLD,23);
-        
-        
-        text1.setFont(new Font("Arial",Font.BOLD,40));
+        combo.addItem("TEST1");
+        combo.addItem("TEST2");
+                      
+        name.setFocusable(true);
+        name.setFont(new Font("Arial",Font.BOLD,40));
+        combo.setFont(new Font("Arial",Font.BOLD,20));  
+        Font f = new Font("Arial",Font.BOLD,23);  
         l1.setFont(f);
         l2.setFont(f);
+        l3.setFont(f);
         b1.setFont(f);
-        combo.setFont(new Font("Arial",Font.BOLD,20));
+            
         
-        pstart.add(l1,"gapright 30%, gapleft 30%, width 50%,wrap 150px");
-        pstart.add(text1,"gapright 20%, gapleft 20%, width 70%,wrap 120px");
+        pstart.add(l1,"gapright 30%, gapleft 30%, width 50%,wrap 110px");
+        pstart.add(l3,"gapright 20%, gapleft 20%, width 70%,wrap 10px");
+        pstart.add(name,"gapright 20%, gapleft 20%, width 70%,wrap 120px");
         pstart.add(l2,"gapleft 10%");
         pstart.add(combo,"pos 350px 405px");              
         
@@ -64,12 +74,38 @@ public class Startup extends JFrame{
     }
     
     private void addListener(){
-        
+        b1.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(name.getText().equals("")){
+                    JOptionPane.showMessageDialog(pstart,
+                    "Please enter/choose your name !",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);                    
+                }
+                
+                else throwName();
+            }
+        });
+        name.addKeyListener(new KeyAdapter(){
+            @Override
+            public void keyPressed(KeyEvent e){
+                if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    throwName();
+                }
+            }
+        });        
+
         
     }
     
-    public void setMain(Object menu){
-        this.main = main;
+    public void throwName(){     
+        Main a = (Main)main;
+        a.setVisible(true);
+        a.setName(name.getText());
+   }
+    public void setMain(Object main){
+        this.main = main;        
     }
 
 }
