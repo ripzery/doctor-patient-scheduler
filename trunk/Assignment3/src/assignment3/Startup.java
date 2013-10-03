@@ -18,7 +18,7 @@ import javax.swing.border.Border;
  *
  * @author Kunanont
  */
-public class Startup extends JFrame{
+    class Startup extends JFrame{
     private JPanel pstart;
     private JLabel l1,l2,l3;
     private JButton b1;
@@ -33,7 +33,7 @@ public class Startup extends JFrame{
 
         pstart = (JPanel)getContentPane();
         pstart.setLayout(new MigLayout("insets 50 0 0 0"));
-        pstart.setBackground(new Color(0xff,0xf0,0xa5));
+        pstart.setBackground(new Color(0x3e,0x60,0x6f));
         
         addComponents();
         addListener();
@@ -99,12 +99,12 @@ public class Startup extends JFrame{
         
     }
     
-    public void throwName(){     
-        main.setVisible(true);
-        main.setName(name.getText());
+    public void throwName(){
+        if(main==null){
+            main = new Main(name.getText());
+        }
+        else{
+            main.setVisible(true);
+        }
    }
-    public void setMain(Object main){
-        this.main = (Main)main;        
-    }
-
 }
