@@ -23,15 +23,17 @@ public class Main extends JFrame {
     private static Startup startup;
     private int width=800,height=600;
     private String name;
-    private String[] time,daylist;
+    private String[] time,bloodlist;
     private JPanel TitleBar,allergyBox,informationBox,updateBox;
-    private JCheckBox[] blood;
+    private JCheckBox[] day;
     private JTextField namefield;
-    private JComboBox start,end,day;
+    private JComboBox start,end,blood;
     private JButton insert,clear,finish,change;
     private JList patientList;
     private ButtonGroup bg;
     private DefaultListModel model;
+    boolean checker = false;
+    int i = 0;
         
     public Main(String name){        
         this.setDoctorName(name);
@@ -46,8 +48,6 @@ public class Main extends JFrame {
         getContentPane().setBackground(new Color(0x3e,0x60,0x6f));
         
         setVisible(true);
-        
-        
     }
     
     public static void main(String args[]){       
@@ -78,36 +78,36 @@ public class Main extends JFrame {
     }
     
     private void addBloodBox(){
-        Font f = new Font("Arial",Font.BOLD,36);   
+        Font f = new Font("Arial",Font.BOLD,24);   
         allergyBox = new JPanel(new MigLayout());
-        blood = new JCheckBox[5];
-        blood[0] = new JCheckBox("  A");blood[0].setFont(f);blood[0].setOpaque(false);
-        blood[1] = new JCheckBox("  B");blood[1].setFont(f);blood[1].setOpaque(false);
-        blood[2] = new JCheckBox("  O");blood[2].setFont(f);blood[2].setOpaque(false);
-        blood[3] = new JCheckBox("  AB");blood[3].setFont(f);blood[3].setOpaque(false);
-        blood[4] = new JCheckBox("  X");blood[4].setFont(f);blood[4].setOpaque(false);
+        day = new JCheckBox[5];
+        day[0] = new JCheckBox("  MONDAY");day[0].setFont(f);day[0].setOpaque(false);
+        day[1] = new JCheckBox("  TUESDAY");day[1].setFont(f);day[1].setOpaque(false);
+        day[2] = new JCheckBox("  WEDNESDAY");day[2].setFont(f);day[2].setOpaque(false);
+        day[3] = new JCheckBox("  THURSDAY");day[3].setFont(f);day[3].setOpaque(false);
+        day[4] = new JCheckBox("  FRIDAY");day[4].setFont(f);day[4].setOpaque(false);
         
         bg = new ButtonGroup();
-        bg.add(blood[0]);
-        bg.add(blood[1]);
-        bg.add(blood[2]);
-        bg.add(blood[3]);
-        bg.add(blood[4]);
+        bg.add(day[0]);
+        bg.add(day[1]);
+        bg.add(day[2]);
+        bg.add(day[3]);
+        bg.add(day[4]);
         
         
-        JLabel allergyTitle = new JLabel("Patient's blood");
+        JLabel allergyTitle = new JLabel("Patient's day");
         allergyTitle.setFont(new Font("Arial",Font.CENTER_BASELINE,16));
         
         allergyBox.add(allergyTitle,"wrap 30px,center");
-        allergyBox.add(blood[0],"gapleft 3%,wrap 30px");
-        allergyBox.add(blood[1],"gapleft 3%,wrap 30px");
-        allergyBox.add(blood[2],"gapleft 3%,wrap 30px");
-        allergyBox.add(blood[3],"gapleft 3%,wrap 30px");
-        allergyBox.add(blood[4],"gapleft 3%,wrap 30px");
+        allergyBox.add(day[0],"gapleft 3%,wrap 30px");
+        allergyBox.add(day[1],"gapleft 3%,wrap 30px");
+        allergyBox.add(day[2],"gapleft 3%,wrap 30px");
+        allergyBox.add(day[3],"gapleft 3%,wrap 30px");
+        allergyBox.add(day[4],"gapleft 3%,wrap 30px");
         
         allergyBox.setBackground(new Color(0x91,0xaa,0x9d));
         
-        this.add(allergyBox,"gapleft 1%,id blood");
+        this.add(allergyBox,"gapleft 1%,id day");
     }
     
     private void addInformationBox(){
@@ -125,8 +125,8 @@ public class Main extends JFrame {
                 ,"12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00"};
         start = new JComboBox(time);
         end = new JComboBox(time);
-        daylist = new String[]{"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-        day = new JComboBox(daylist);
+        bloodlist = new String[]{"A","B","AB","O"};
+        blood = new JComboBox(bloodlist);
         insert = new JButton("Insert");
         clear = new JButton("Clear");
         finish = new JButton("Finish");
@@ -143,7 +143,7 @@ public class Main extends JFrame {
         informationBox.add(finish,"grow");
         informationBox.add(change,"grow");
         
-        this.add(informationBox,"pos blood.x2+10 blood.y 550 blood.y2,id information");
+        this.add(informationBox,"pos day.x2+10 day.y 550 day.y2,id information");
     }
     
     private void addUpdateBox(){
@@ -175,17 +175,28 @@ public class Main extends JFrame {
         });
         
         insert.addActionListener(new ActionListener(){
-            String starttime,endtime;            
+            String starttime,endtime;
             public void actionPerformed(ActionEvent e){
-                if(!namefield.getText().equals("")){
+                
+                for(i=0 ;i<5;i++){
+                    if(day[i].isSelected()){
+                        checker = true;
+                        break;
+                    }else checker = false;                    
+                }
+                
+                System.out.print(i);
+                System.out.print(checker);
+                if(!namefield.getText().equals("") && checker==true){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
                     namefield.setText("");
                     model.addElement(name);
-                }else{
+                }else if(namefield.getText().equals("")){
                     JOptionPane.showMessageDialog(informationBox,"Please enter patient name's !","Error",JOptionPane.ERROR_MESSAGE); 
-                }
+                }else if(checker == false)
+                    JOptionPane.showMessageDialog(informationBox,"Please enter schedule day !","Error",JOptionPane.ERROR_MESSAGE);
                 patientList.validate();
             }
         });
