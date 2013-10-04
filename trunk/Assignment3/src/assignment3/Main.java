@@ -206,8 +206,14 @@ public class Main extends JFrame {
                 model.removeAllElements();
             }
         });
-    }
-    
+        
+        finish.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+             new Summary();   
+            }
+    });
+  }
+  
     public final void setDoctorName(String s){
       name = s;
       setTitle("Doctor "+name+" 's scheduler");
