@@ -21,11 +21,11 @@ public class Main extends JFrame {
     private String name;
     private String[] time,daylist;
     private JPanel TitleBar,allergyBox,informationBox,updateBox;
-    private JLabel title,allergyTitle,patientName,choosetimefrom,choosetimeto;
-    private JCheckBox[] allergy;
+    private JCheckBox[] blood;
     private JTextField namefield;
     private JComboBox start,end,day;
     private JButton insert,clear,finish,change;
+    private ButtonGroup bg;
     
     public Main(String name){        
         this.setDoctorName(name);
@@ -48,10 +48,19 @@ public class Main extends JFrame {
           startup = new Startup();
     }
     private void addComponent(){
+        
+        addTitleBar();
+        addBloodBox();
+        addInformationBox();
+        addUpdateBox();
+        
+    }
+    
+    private void addTitleBar(){
         Font f = new Font("Arial",Font.BOLD,36);        
         TitleBar = new JPanel();
         TitleBar.setLayout(new MigLayout());
-        title = new JLabel("Dr. "+name+" 's scheduler");
+        JLabel title = new JLabel("Dr. "+name+" 's scheduler");
         title.setFont(f);
         title.setForeground(new Color(0xd1,0xdb,0xbd));
         
@@ -60,46 +69,51 @@ public class Main extends JFrame {
         TitleBar.setOpaque(false);
         
         this.add(TitleBar,"gapleft 20%,width 60%,gapright 20%,wrap 20px,id title");
-        
-        /*
-         * Ending of TitleBar
-         */
-        
+    }
+    
+    private void addBloodBox(){
+        Font f = new Font("Arial",Font.BOLD,36);   
         allergyBox = new JPanel(new MigLayout());
-        allergy = new JCheckBox[5];
-        allergy[0] = new JCheckBox("  A");allergy[0].setFont(f);allergy[0].setOpaque(false);
-        allergy[1] = new JCheckBox("  B");allergy[1].setFont(f);allergy[1].setOpaque(false);
-        allergy[2] = new JCheckBox("  C");allergy[2].setFont(f);allergy[2].setOpaque(false);
-        allergy[3] = new JCheckBox("  D");allergy[3].setFont(f);allergy[3].setOpaque(false);
-        allergy[4] = new JCheckBox("  E");allergy[4].setFont(f);allergy[4].setOpaque(false);
+        blood = new JCheckBox[5];
+        blood[0] = new JCheckBox("  A");blood[0].setFont(f);blood[0].setOpaque(false);
+        blood[1] = new JCheckBox("  B");blood[1].setFont(f);blood[1].setOpaque(false);
+        blood[2] = new JCheckBox("  O");blood[2].setFont(f);blood[2].setOpaque(false);
+        blood[3] = new JCheckBox("  AB");blood[3].setFont(f);blood[3].setOpaque(false);
+        blood[4] = new JCheckBox("  X");blood[4].setFont(f);blood[4].setOpaque(false);
         
-        allergyTitle = new JLabel("Patient's allergy");
+        bg = new ButtonGroup();
+        bg.add(blood[0]);
+        bg.add(blood[1]);
+        bg.add(blood[2]);
+        bg.add(blood[3]);
+        bg.add(blood[4]);
+        
+        
+        JLabel allergyTitle = new JLabel("Patient's blood");
         allergyTitle.setFont(new Font("Arial",Font.CENTER_BASELINE,16));
         
         allergyBox.add(allergyTitle,"wrap 30px,center");
-        allergyBox.add(allergy[0],"gapleft 3%,wrap 30px");
-        allergyBox.add(allergy[1],"gapleft 3%,wrap 30px");
-        allergyBox.add(allergy[2],"gapleft 3%,wrap 30px");
-        allergyBox.add(allergy[3],"gapleft 3%,wrap 30px");
-        allergyBox.add(allergy[4],"gapleft 3%,wrap 30px");
+        allergyBox.add(blood[0],"gapleft 3%,wrap 30px");
+        allergyBox.add(blood[1],"gapleft 3%,wrap 30px");
+        allergyBox.add(blood[2],"gapleft 3%,wrap 30px");
+        allergyBox.add(blood[3],"gapleft 3%,wrap 30px");
+        allergyBox.add(blood[4],"gapleft 3%,wrap 30px");
         
         allergyBox.setBackground(new Color(0x91,0xaa,0x9d));
         
-        this.add(allergyBox,"gapleft 1%,id allergy");
-        
-        /*
-         * Ending of allergyBox
-         */
-        
+        this.add(allergyBox,"gapleft 1%,id blood");
+    }
+    
+    private void addInformationBox(){
         informationBox = new JPanel(new MigLayout("fillx","[][grow][][grow]","nogrid"));
-        f = new Font("Arial",Font.BOLD,20);  
-        patientName = new JLabel("Patient name : ");
+        Font f = new Font("Arial",Font.BOLD,20);  
+        JLabel patientName = new JLabel("Patient name : ");
         patientName.setFont(f);
         namefield = new JTextField(30);
         namefield.setFont(f);
-        choosetimefrom = new JLabel("Choose time : ");
+        JLabel choosetimefrom = new JLabel("Choose time : ");
         choosetimefrom.setFont(f);
-        choosetimeto = new JLabel(" to");
+        JLabel choosetimeto = new JLabel(" to");
         choosetimeto.setFont(f);
         time = new String[]{"08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30"
                 ,"12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00"};
@@ -123,16 +137,19 @@ public class Main extends JFrame {
         informationBox.add(finish,"grow");
         informationBox.add(change,"grow");
         
-        this.add(informationBox,"pos allergy.x2+10 allergy.y 550 allergy.y2,id information");
-        
-        /*
-         * Ending of informationBox
-         */
-        
-        updateBox = new JPanel();
-        
+        this.add(informationBox,"pos blood.x2+10 blood.y 550 blood.y2,id information");
+    }
+    
+    private void addUpdateBox(){
+        Font f = new Font("Arial",Font.BOLD,20);  
+        updateBox = new JPanel(new MigLayout("fillx,debug","[center]","[]50[]"));
+        JLabel heading = new JLabel("Patient Added");
+        heading.setFont(f);
+        updateBox.add(heading,"wrap");
         this.add(updateBox,"pos information.x2+10 information.y 770 information.y2");
-        
+        JLabel test = new JLabel("Testing");
+        test.setFont(f);
+        updateBox.add(test);
     }
     
     private void addListener(){
