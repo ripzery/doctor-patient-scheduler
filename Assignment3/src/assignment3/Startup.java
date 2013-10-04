@@ -33,7 +33,7 @@ import javax.swing.border.Border;
 
         pstart = (JPanel)getContentPane();
         pstart.setLayout(new MigLayout("insets 50 0 0 0"));
-        pstart.setBackground(new Color(0x3e,0x60,0x6f));
+        pstart.setBackground(new Color(0x3e,0x60,0x6f));       
         
         addComponents();
         addListener();
@@ -63,7 +63,7 @@ import javax.swing.border.Border;
         l2.setFont(f);
         l3.setFont(f);
         b1.setFont(f);
-            
+        
         pstart.add(l1,"gapright 30%, gapleft 30%, width 50%,wrap 110px");
         pstart.add(l3,"gapright 20%, gapleft 20%, width 70%,wrap 10px");
         pstart.add(name,"gapright 20%, gapleft 20%, width 70%,wrap 80px");
