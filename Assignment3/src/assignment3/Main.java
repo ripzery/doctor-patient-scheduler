@@ -32,7 +32,7 @@ public class Main extends JFrame {
     private JList patientList;
     private ButtonGroup bg;
     private DefaultListModel model;
-    
+        
     public Main(String name){        
         this.setDoctorName(name);
         this.setLayout(new MigLayout());
@@ -175,7 +175,7 @@ public class Main extends JFrame {
         });
         
         insert.addActionListener(new ActionListener(){
-            String starttime,endtime;
+            String starttime,endtime;            
             public void actionPerformed(ActionEvent e){
                 if(!namefield.getText().equals("")){
                     starttime = (String)start.getSelectedItem();
@@ -183,8 +183,16 @@ public class Main extends JFrame {
                     name = starttime+" - "+endtime+" "+namefield.getText();
                     namefield.setText("");
                     model.addElement(name);
+                }else{
+                    JOptionPane.showMessageDialog(informationBox,"Please enter patient name's !","Error",JOptionPane.ERROR_MESSAGE); 
                 }
                 patientList.validate();
+            }
+        });
+        
+        clear.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                model.removeAllElements();
             }
         });
     }
