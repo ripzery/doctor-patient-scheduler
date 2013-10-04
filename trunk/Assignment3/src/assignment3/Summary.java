@@ -22,6 +22,7 @@ public class Summary extends JFrame{
     private JPanel heading_bar;
     private JComboBox day,doctor;
     private JPanel Schedule,Desc,spd;
+    private JButton back;
     String[] weekdays= new String[]{"Monday","Tuesday","Wednesday","Thursday","Friday"};
     
     public Summary(){
@@ -31,6 +32,7 @@ public class Summary extends JFrame{
         setVisible(true);
         setLayout(new MigLayout("debug,fillx"));
         addComponent();
+        addListener();
         
     }
     public void addComponent(){
@@ -50,13 +52,25 @@ public class Summary extends JFrame{
         
         Schedule = new JPanel(new MigLayout());
         Schedule.setBackground(Color.yellow);
-        spd.add(Schedule,"width 300px,height 400px");
+        spd.add(Schedule,"width 300px,height 300px");
         
         Desc = new JPanel(new MigLayout());
         Desc.setBackground(Color.RED);
-        spd.add(Desc,"gapx 30px,width 300px, height 400px");
+        spd.add(Desc,"gapx 30px,width 300px, height 300px");
         spd.setOpaque(false);
-        add(spd,"center");
+        add(spd,"center,wrap 20px");
+        
+        back = new JButton("Back to Home Screen");
+        Font g = new Font("Arial",Font.BOLD,20);
+        back.setFont(g);
+        add(back,"center");
     }
     
+    public void addListener(){
+        back.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+             new Startup();   
+            }
+    });
+    }
 }
