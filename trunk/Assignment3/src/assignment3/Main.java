@@ -5,6 +5,10 @@
 package assignment3;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -25,7 +29,9 @@ public class Main extends JFrame {
     private JTextField namefield;
     private JComboBox start,end,day;
     private JButton insert,clear,finish,change;
+    private JList patientList;
     private ButtonGroup bg;
+    private DefaultListModel model;
     
     public Main(String name){        
         this.setDoctorName(name);
@@ -142,18 +148,45 @@ public class Main extends JFrame {
     
     private void addUpdateBox(){
         Font f = new Font("Arial",Font.BOLD,20);  
-        updateBox = new JPanel(new MigLayout("fillx,debug","[center]","[]50[]"));
+        updateBox = new JPanel(new MigLayout("fillx,debug"));
         JLabel heading = new JLabel("Patient Added");
         heading.setFont(f);
-        updateBox.add(heading,"wrap");
+        updateBox.add(heading,"center,wrap 10px");
+        model = new DefaultListModel();
+        patientList = new JList(model);
+        patientList.setFont(f);
+        updateBox.add(patientList,"center,wrap");
         this.add(updateBox,"pos information.x2+10 information.y 770 information.y2");
-        JLabel test = new JLabel("Testing");
-        test.setFont(f);
-        updateBox.add(test);
     }
     
     private void addListener(){
+        namefield.addKeyListener(new KeyAdapter(){
+            String starttime,endtime;
+            public void keyPressed(KeyEvent e){
+                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")){
+                    starttime = (String)start.getSelectedItem();
+                    endtime = (String)end.getSelectedItem();
+                    name = starttime+" - "+endtime+" "+namefield.getText();
+                    namefield.setText("");
+                    model.addElement(name);
+                }
+                patientList.validate();
+            }
+        });
         
+        insert.addActionListener(new ActionListener(){
+            String starttime,endtime;
+            public void actionPerformed(ActionEvent e){
+                if(!namefield.getText().equals("")){
+                    starttime = (String)start.getSelectedItem();
+                    endtime = (String)end.getSelectedItem();
+                    name = starttime+" - "+endtime+" "+namefield.getText();
+                    namefield.setText("");
+                    model.addElement(name);
+                }
+                patientList.validate();
+            }
+        });
     }
     
     public final void setDoctorName(String s){
