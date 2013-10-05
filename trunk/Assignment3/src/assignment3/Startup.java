@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -27,21 +28,29 @@ import javax.swing.text.PlainDocument;
     private JComboBox combo;
     private JTextField name;
     private Main main;
+    private JLabel background;
     public Startup(){
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
         setLocation(320,70);
         setSize(800,600);  
 
-        pstart = (JPanel)getContentPane();
-        pstart.setLayout(new MigLayout("insets 50 0 0 0"));
-        pstart.setBackground(new Color(0x3e,0x60,0x6f));       
-        
+        setLayout(new BorderLayout());
+       // pstart.setBackground(new Color(0x3e,0x60,0x6f));
+        URL img = this.getClass().getResource("pic1.jpg");
+        background = new JLabel(new ImageIcon(img),JLabel.CENTER);
+        background.setLayout(new MigLayout("insets 50 0 0 0,fillx"));
+        background.setOpaque(false);
+        add(background);
         addComponents();
         addListener();
         
         setVisible(true);
+        setSize(799,599); 
+        setSize(800,600); 
         setTitle("Doctor-Patients Scheduler");
+        validate();
+        repaint();
     
     }
     
@@ -67,13 +76,12 @@ import javax.swing.text.PlainDocument;
         l3.setFont(f);
         b1.setFont(f);
         
-        pstart.add(l1,"gapright 30%, gapleft 30%, width 50%,wrap 110px");
-        pstart.add(l3,"gapright 20%, gapleft 20%, width 70%,wrap 10px");
-        pstart.add(name,"gapright 20%, gapleft 20%, width 70%,wrap 80px");
-        pstart.add(l2,"gapleft 20%,id l3");
-        pstart.add(combo,"pos l3.x2+20 l3.y");              
-        
-        pstart.add(b1,"pos 650px 490px");
+        background.add(l1,"gapright 120px,right,wrap 110px");
+        background.add(l3,"gapright 220px,right,wrap 10px");
+        background.add(name,"gapright 100px,right, width 40%,wrap 80px");
+        background.add(l2,"gapleft 47%,id l3");
+        background.add(combo,"pos l3.x2+20 l3.y");              
+        background.add(b1,"pos 500px 490px");
     }
     
     private void addListener(){
