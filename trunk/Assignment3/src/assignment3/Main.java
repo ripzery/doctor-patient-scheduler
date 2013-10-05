@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -31,16 +34,16 @@ public class Main extends JFrame {
     private String name;
     private String[] time,bloodlist,time2;
     private JPanel TitleBar,allergyBox,informationBox,updateBox;
-    private JCheckBox[] day;
-    private JTextField namefield;
+    private JCheckBox[] day,sex;
+    private JTextField namefield,agefield;
     private JComboBox start,end,blood;
     private JButton insert,clear,finish,change;
     private JList patientList;
-    private ButtonGroup bg;
+    private ButtonGroup bg,sexbg;
     private DefaultListModel[] model;
     private DefaultComboBoxModel t1,t2,previoust1,previoust2;
     private ArrayList<Integer> startMeeting = new ArrayList<>();//keep all the time when start meeting patient;
-    boolean checker = false;
+    boolean checker = false,checker2 = false,checker3 = false;
     int i = 0;
         
     public Main(String name){        
@@ -125,6 +128,7 @@ public class Main extends JFrame {
         patientName.setFont(f);
         namefield = new JTextField(30);
         namefield.setFont(f);
+        namefield.setDocument(new JTextFieldLimit(20));
         JLabel choosetimefrom = new JLabel("Choose time : ");
         choosetimefrom.setFont(f);
         JLabel choosetimeto = new JLabel(" to");
@@ -154,12 +158,30 @@ public class Main extends JFrame {
         finish = new JButton("Finish");
         change = new JButton("Change doctor");
         
+        sex = new JCheckBox[2];
+        sex[0] = new JCheckBox("  MALE");day[0].setFont(f);day[0].setOpaque(false);
+        sex[1] = new JCheckBox("  FEMALE");day[1].setFont(f);day[1].setOpaque(false);
+        
+        sexbg = new ButtonGroup();
+        sexbg.add(sex[0]);
+        sexbg.add(sex[1]);
+        
+        JLabel lsex = new JLabel("Sex: ");
+        JLabel lage = new JLabel("Age: ");
+        agefield = new JTextField(2);
+        agefield.setDocument(new JTextFieldLimit(2));
+        lage.setFont(f);
+        lsex.setFont(f);
+        
         informationBox.add(patientName,"grow");
         informationBox.add(namefield,"gapx unrel unrel,wrap 30px");
         informationBox.add(choosetimefrom,"grow");
         informationBox.add(start,"grow");
         informationBox.add(choosetimeto,"grow");
         informationBox.add(end,",grow,wrap 30px");
+        informationBox.add(lsex);
+        informationBox.add(sex[0]);informationBox.add(sex[1]);
+        informationBox.add(lage);informationBox.add(agefield,"wrap 30px");
         informationBox.add(insert,"grow");
         informationBox.add(clear,"grow");
         informationBox.add(finish,"grow");
@@ -323,6 +345,20 @@ public class Main extends JFrame {
             }
         });
         
+        agefield.addKeyListener(new KeyAdapter(){
+            public void keyPressed(KeyEvent e){
+               char key = e.getKeyChar();
+               if(key >='0' && key <= '9'||(key == KeyEvent.VK_BACK_SPACE) 
+                       ||( key == KeyEvent.VK_DELETE)
+                       ||( key == KeyEvent.VK_ENTER))
+                   e.setKeyChar(' ');
+               else{
+                   JOptionPane.showMessageDialog(informationBox,"Please enter number only !","Error",JOptionPane.ERROR_MESSAGE);
+                   agefield.setText("");
+               }
+           } 
+        });
+        
         end.addMouseListener(new MouseAdapter(){
             public void mouseEntered(MouseEvent e){
                 removeEndTime();
@@ -333,16 +369,24 @@ public class Main extends JFrame {
         insert.addActionListener(new ActionListener(){
             String starttime,endtime;
             public void actionPerformed(ActionEvent e){   
+                //LOOP for days
                 for(i=0 ;i<5;i++){
                     if(day[i].isSelected()){
                         checker = true;
                         break;
                     }else checker = false;                    
                 }
+                //LOOP for sex
+                for(int j =0;j<2;j++){
+                    if(sex[j].isSelected()){
+                        checker2 = true;
+                        break;
+                    }else checker2 =false;
+                }
                 /*
                  * So, we need to store the day which selected in somewhere around here to prepare record to the file.
                  */
-                if(!namefield.getText().equals("") && checker==true){
+                if(!namefield.getText().equals("") && checker==true && checker2==true){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
@@ -394,5 +438,23 @@ public class Main extends JFrame {
       name = s;
       setTitle("Doctor "+name+" 's scheduler");
       startup.dispose();
-    }    
+    }
+    
+    // Use to limit number of character in JTextFields
+   public class JTextFieldLimit extends PlainDocument {
+        private int limit;
+
+            JTextFieldLimit(int limit) {
+             super();
+             this.limit = limit;
+             }
+
+        public void insertString( int offset, String  str, AttributeSet attr ) throws BadLocationException {
+            
+            if (str == null) return;
+            if ((getLength() + str.length()) <= limit) {
+              super.insertString(offset, str, attr);
+            }
+          }
+      }
 }
