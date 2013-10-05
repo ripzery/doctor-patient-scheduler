@@ -4,15 +4,17 @@
  */
 package assignment3;
 
+
 import net.miginfocom.swing.MigLayout;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 /**
  *
@@ -46,6 +48,7 @@ import javax.swing.border.Border;
     private void addComponents(){
     
         name = new JTextField();
+        name.setDocument(new JTextFieldLimit(10));
         l3 = new JLabel("Enter your name: ");
         l2 = new JLabel("Or choose exists name:");
         l1 = new JLabel("Doctor-Patients Scheduler");
@@ -107,4 +110,22 @@ import javax.swing.border.Border;
             main.setVisible(true);
         }
    }
+    
+   // Use to limit number of character in JTextFields
+   public class JTextFieldLimit extends PlainDocument {
+        private int limit;
+
+            JTextFieldLimit(int limit) {
+             super();
+             this.limit = limit;
+             }
+
+        public void insertString( int offset, String  str, AttributeSet attr ) throws BadLocationException {
+            
+            if (str == null) return;
+            if ((getLength() + str.length()) <= limit) {
+              super.insertString(offset, str, attr);
+            }
+          }
+      }
 }
