@@ -328,7 +328,19 @@ public class Main extends JFrame {
     private void addListener(){
         namefield.addKeyListener(new KeyAdapter(){
             String starttime,endtime;
-            public void keyPressed(KeyEvent e){
+            public void keyPressed(KeyEvent e){                
+               char key = e.getKeyChar();
+               int key2 = e.getKeyCode();
+               if(key >='A' && key <= 'z'||(key == KeyEvent.VK_BACK_SPACE) 
+                       ||( key == KeyEvent.VK_DELETE)
+                       ||( key == KeyEvent.VK_ENTER)
+                       ||( key2 == KeyEvent.VK_SHIFT))
+                   e.setKeyChar(' ');
+               else{
+                   JOptionPane.showMessageDialog(informationBox,"Please enter character only !","Error",JOptionPane.ERROR_MESSAGE);
+                   namefield.setText("");
+               }                
+                
                 if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
@@ -348,9 +360,11 @@ public class Main extends JFrame {
         agefield.addKeyListener(new KeyAdapter(){
             public void keyPressed(KeyEvent e){
                char key = e.getKeyChar();
+               int key2 = e.getKeyCode();
                if(key >='0' && key <= '9'||(key == KeyEvent.VK_BACK_SPACE) 
                        ||( key == KeyEvent.VK_DELETE)
-                       ||( key == KeyEvent.VK_ENTER))
+                       ||( key == KeyEvent.VK_ENTER)
+                       ||( key2 == KeyEvent.VK_SHIFT))
                    e.setKeyChar(' ');
                else{
                    JOptionPane.showMessageDialog(informationBox,"Please enter number only !","Error",JOptionPane.ERROR_MESSAGE);
