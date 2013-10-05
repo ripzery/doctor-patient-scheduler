@@ -37,7 +37,7 @@ public class Main extends JFrame {
     private JButton insert,clear,finish,change;
     private JList patientList;
     private ButtonGroup bg;
-    private DefaultListModel model;
+    private DefaultListModel[] model;
     private DefaultComboBoxModel t1,t2,previoust1,previoust2;
     private ArrayList<Integer> startMeeting = new ArrayList<>();//keep all the time when start meeting patient;
     boolean checker = false;
@@ -211,7 +211,7 @@ public class Main extends JFrame {
             }
         }
         int oldmax = t2.getSize();
-        System.out.println("Selected : "+a);
+        //System.out.println("Selected : "+a);
         for(int i=0;i<count;i++){
             t2.removeElementAt(oldmax-count);
         }
@@ -293,8 +293,11 @@ public class Main extends JFrame {
         JLabel heading = new JLabel("Patient Added");
         heading.setFont(f);
         updateBox.add(heading,"center,wrap 10px");
-        model = new DefaultListModel();
-        patientList = new JList(model);
+        model = new DefaultListModel[5];
+        for(int i=0;i<model.length;i++){
+            model[i] = new DefaultListModel();
+        }
+        patientList = new JList(model[0]);
         patientList.setFont(f);
         updateBox.add(patientList,"center,wrap");
         this.add(updateBox,"pos information.x2+10 information.y 770 information.y2");
@@ -309,7 +312,12 @@ public class Main extends JFrame {
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
                     namefield.setText("");
-                    model.addElement(name);
+                    for(int i=0;i<model.length;i++){
+                        if(day[i].isSelected()){
+                            model[i].addElement(name);
+                        }
+                    }
+                    
                 }
                 patientList.validate();
             }
@@ -339,7 +347,11 @@ public class Main extends JFrame {
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
                     namefield.setText("");
-                    model.addElement(name);
+                    for(int i=0;i<model.length;i++){
+                        if(day[i].isSelected()){
+                            model[i].addElement(name);
+                        }
+                    }
                     /*
                      * Handling about time period in the combobox that has been chosen
                      */
@@ -354,7 +366,11 @@ public class Main extends JFrame {
         
         clear.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                model.removeAllElements();
+                for(int i=0;i<model.length;i++){
+                        if(day[i].isSelected()){
+                            model[i].removeAllElements();
+                        }
+                    }
             }
         });
         
@@ -363,6 +379,15 @@ public class Main extends JFrame {
              new Summary();   
             }
     });
+        
+        for(int i=0;i<model.length;i++){
+            final int index = i;
+            day[i].addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    patientList.setModel(model[index]);
+                }
+        });
+        }
   }
   
     public final void setDoctorName(String s){
