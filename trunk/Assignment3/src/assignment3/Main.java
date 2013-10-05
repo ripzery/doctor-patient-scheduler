@@ -41,6 +41,7 @@ public class Main extends JFrame {
     private JList patientList;
     private ButtonGroup bg,sexbg;
     private DefaultListModel[] model;
+    private JScrollPane scroll;
     private DefaultComboBoxModel t1,t2,previoust1,previoust2;
     private ArrayList<Integer> startMeeting = new ArrayList<>();//keep all the time when start meeting patient;
     boolean checker = false,checker2 = false,checker3 = false;
@@ -320,6 +321,9 @@ public class Main extends JFrame {
             model[i] = new DefaultListModel();
         }
         patientList = new JList(model[0]);
+        patientList.setVisibleRowCount(5);
+        //scroll = new JScrollPane(patientList);
+        //scroll.add(patientList);
         patientList.setFont(f);
         updateBox.add(patientList,"center,wrap");
         this.add(updateBox,"pos information.x2+10 information.y 770 information.y2");
@@ -328,6 +332,7 @@ public class Main extends JFrame {
     private void addListener(){
         namefield.addKeyListener(new KeyAdapter(){
             String starttime,endtime;
+            int index;
             public void keyPressed(KeyEvent e){                
                char key = e.getKeyChar();
                int key2 = e.getKeyCode();
@@ -340,20 +345,28 @@ public class Main extends JFrame {
                    JOptionPane.showMessageDialog(informationBox,"Please enter character only !","Error",JOptionPane.ERROR_MESSAGE);
                    namefield.setText("");
                }                
+                for(i=0 ;i<5;i++){
+                    if(day[i].isSelected()){
+                        checker = true;
+                        index = i;
+                        break;
+                    }else checker = false;                    
+                }
                 
-                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")){
+                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")&&checker==true&&start.getItemCount()>0){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
                     namefield.setText("");
-                    for(int i=0;i<model.length;i++){
-                        if(day[i].isSelected()){
-                            model[i].addElement(name);
-                        }
-                    }
-                    
+                    model[index].addElement(name);
+                    removeChosenTime();
+                }else if(namefield.getText().equals("")&&e.getKeyCode()==KeyEvent.VK_ENTER){
+                    JOptionPane.showMessageDialog(informationBox,"Please enter patient name's !","Error",JOptionPane.ERROR_MESSAGE); 
+                }else if(checker == false&&e.getKeyCode()==KeyEvent.VK_ENTER)
+                    JOptionPane.showMessageDialog(informationBox,"Please enter schedule day !","Error",JOptionPane.ERROR_MESSAGE);
+                else if(start.getItemCount()==0&&e.getKeyCode()==KeyEvent.VK_ENTER){
+                    JOptionPane.showMessageDialog(informationBox,"All time period has been reserved","Error",JOptionPane.ERROR_MESSAGE);
                 }
-                patientList.validate();
             }
         });
         
@@ -375,18 +388,21 @@ public class Main extends JFrame {
         
         end.addMouseListener(new MouseAdapter(){
             public void mouseEntered(MouseEvent e){
-                removeEndTime();
-                end.validate();
+                if(end.getItemCount()>0){
+                    removeEndTime();
+                    end.validate();
+                }
             }
         });
         
         insert.addActionListener(new ActionListener(){
             String starttime,endtime;
+            int index;
             public void actionPerformed(ActionEvent e){   
-                //LOOP for days
                 for(i=0 ;i<5;i++){
                     if(day[i].isSelected()){
                         checker = true;
+                        index = i;
                         break;
                     }else checker = false;                    
                 }
@@ -405,11 +421,7 @@ public class Main extends JFrame {
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
                     namefield.setText("");
-                    for(int i=0;i<model.length;i++){
-                        if(day[i].isSelected()){
-                            model[i].addElement(name);
-                        }
-                    }
+                    model[index].addElement(name);
                     /*
                      * Handling about time period in the combobox that has been chosen
                      */
@@ -418,7 +430,6 @@ public class Main extends JFrame {
                     JOptionPane.showMessageDialog(informationBox,"Please enter patient name's !","Error",JOptionPane.ERROR_MESSAGE); 
                 }else if(checker == false)
                     JOptionPane.showMessageDialog(informationBox,"Please enter schedule day !","Error",JOptionPane.ERROR_MESSAGE);
-                patientList.validate();
             }
         });
         
@@ -442,6 +453,7 @@ public class Main extends JFrame {
             final int index = i;
             day[i].addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
+                    System.out.println("Model Working");
                     patientList.setModel(model[index]);
                 }
         });
