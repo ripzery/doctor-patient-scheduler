@@ -42,7 +42,7 @@ public class Main extends JFrame {
     private ButtonGroup bg,sexbg;
     private DefaultListModel[] model;
     private JScrollPane scroll;
-    private DefaultComboBoxModel t1,t2,previoust1,previoust2;
+    private DefaultComboBoxModel[] t1,t2,previoust1,previoust2;
     private ArrayList<Integer> startMeeting = new ArrayList<>();//keep all the time when start meeting patient;
     boolean checker = false,checker2 = false,checker3 = false;
     int i = 0;
@@ -134,24 +134,9 @@ public class Main extends JFrame {
         choosetimefrom.setFont(f);
         JLabel choosetimeto = new JLabel(" to");
         choosetimeto.setFont(f);
-        time = new String[]{"08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30"
-                ,"12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30"};
-        t1 = new DefaultComboBoxModel();
-        for(String a : time){
-            t1.addElement(a);
-        }
-        start = new JComboBox(t1);
-        time2 = new String[]{time[1],time[2],time[3],time[4],time[5],time[6],time[7],time[8],time[9],time[10]
-                ,time[11],time[12],time[13],time[14],time[15],"16:00"};
-        t2 = new DefaultComboBoxModel();
-        for(String a : time2){
-            t2.addElement(a);
-        }
-        end = new JComboBox(t2);
-        previoust1 = new DefaultComboBoxModel();
-        backupTime(previoust1,t1);
-        previoust2 = new DefaultComboBoxModel();
-        backupTime(previoust2,t2);
+        initTime();
+        start = new JComboBox(t1[0]);
+        end = new JComboBox(t2[0]);
         bloodlist = new String[]{"A","B","AB","O"};
         blood = new JComboBox(bloodlist);
         insert = new JButton("Insert");
@@ -217,7 +202,14 @@ public class Main extends JFrame {
      */
     
     private void removeEndTime(){
-        restoreTime(previoust2,t2);
+        int keymodel = 0;
+        for(int i=0;i<5;i++){
+            if(day[i].isSelected()){
+                keymodel = i;
+                break;
+            }
+        }
+        restoreTime(previoust2[keymodel],t2[keymodel]);
         int count = 0;
         int a = convertTimetoInt((String)start.getSelectedItem());
         /*
@@ -225,25 +217,25 @@ public class Main extends JFrame {
          */
         for(int i=0;i<startMeeting.size();i++){
             if(a<startMeeting.get(i)){
-                for(int j=0;j<t2.getSize();j++){
-                    if(convertTimetoInt((String)t2.getElementAt(j))>startMeeting.get(i)){
+                for(int j=0;j<t2[keymodel].getSize();j++){
+                    if(convertTimetoInt((String)t2[keymodel].getElementAt(j))>startMeeting.get(i)){
                       count++;  
                     }
                 }
                 break;
             }
         }
-        int oldmax = t2.getSize();
+        int oldmax = t2[keymodel].getSize();
         //System.out.println("Selected : "+a);
         for(int i=0;i<count;i++){
-            t2.removeElementAt(oldmax-count);
+            t2[keymodel].removeElementAt(oldmax-count);
         }
         count = 0;
         /*
          * This will block the end time that lower than the start time that cannot be possible
          */
-        for(int i=0;i<t2.getSize();i++){
-            if(a>=(convertTimetoInt((String)t2.getElementAt(i)))){
+        for(int i=0;i<t2[keymodel].getSize();i++){
+            if(a>=(convertTimetoInt((String)t2[keymodel].getElementAt(i)))){
                 count++;
             }
             else{
@@ -251,7 +243,7 @@ public class Main extends JFrame {
             }
         }
         for(int i=0;i<count;i++){
-            t2.removeElementAt(0);
+            t2[keymodel].removeElementAt(0);
         }
     }
     
@@ -274,10 +266,17 @@ public class Main extends JFrame {
         int a = convertTimetoInt((String)start.getSelectedItem());
         int b = convertTimetoInt((String)end.getSelectedItem());
         int index_a = start.getSelectedIndex();
-        int index;
+        int index,keymodel=0;
         
-        for(int i=0;i<t2.getSize();i++){
-            index = convertTimetoInt((String)t2.getElementAt(i));
+        for(int i=0;i<5;i++){
+            if(day[i].isSelected()){
+                keymodel = i;
+                break;
+            }
+        }
+        
+        for(int i=0;i<t2[keymodel].getSize();i++){
+            index = convertTimetoInt((String)t2[keymodel].getElementAt(i));
             if(index>=a&&index<=b){
                 count++;
             }
@@ -292,15 +291,15 @@ public class Main extends JFrame {
          */
         startMeeting.add(a);
         Collections.sort(startMeeting);
-        restoreTime(previoust1,t1);
-        restoreTime(previoust2,t2);
+        restoreTime(previoust1[keymodel],t1[keymodel]);
+        restoreTime(previoust2[keymodel],t2[keymodel]);
         for(int i=0;i<count;i++){
             //System.out.println("Remove"+">>"+t2.getElementAt(index_a));
-            t2.removeElementAt(index_a);
-            t1.removeElementAt(index_a);
+            t2[keymodel].removeElementAt(index_a);
+            t1[keymodel].removeElementAt(index_a);
         }
-        backupTime(previoust1,t1);
-        backupTime(previoust2,t2);
+        backupTime(previoust1[keymodel],t1[keymodel]);
+        backupTime(previoust2[keymodel],t2[keymodel]);
     }
     
     private int convertTimetoInt(String time){
@@ -435,11 +434,10 @@ public class Main extends JFrame {
         
         clear.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                for(int i=0;i<model.length;i++){
-                        if(day[i].isSelected()){
-                            model[i].removeAllElements();
-                        }
-                    }
+                bg.clearSelection();
+                sexbg.clearSelection();
+                agefield.setText("");
+                namefield.setText("");
             }
         });
         
@@ -453,12 +451,50 @@ public class Main extends JFrame {
             final int index = i;
             day[i].addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    System.out.println("Model Working");
                     patientList.setModel(model[index]);
+                    start.setModel(t1[index]);
+                    end.setModel(t2[index]);
                 }
         });
         }
   }
+    
+    private void initTime(){
+        time = new String[]{"08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30"
+                ,"12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30"};
+        t1 = new DefaultComboBoxModel[5];
+        for(int i=0;i<5;i++){
+            t1[i] = new DefaultComboBoxModel();
+        }
+        for(int i=0;i<5;i++){
+            for(String a : time){
+            t1[i].addElement(a);
+            }
+        }
+        time2 = new String[]{time[1],time[2],time[3],time[4],time[5],time[6],time[7],time[8],time[9],time[10]
+                ,time[11],time[12],time[13],time[14],time[15],"16:00"};
+        
+        t2 = new DefaultComboBoxModel[5];
+        for(int i=0;i<5;i++){
+            t2[i] = new DefaultComboBoxModel();
+        }
+        for(int i=0;i<5;i++){
+            for(String a : time2){
+            t2[i].addElement(a);
+            }
+        }
+        previoust1 = new DefaultComboBoxModel[5];
+        for(int i=0;i<5;i++){
+            previoust1[i] = new DefaultComboBoxModel();
+            backupTime(previoust1[i],t1[i]);
+        }
+        previoust2 = new DefaultComboBoxModel[5];
+        for(int i=0;i<5;i++){
+            previoust2[i] = new DefaultComboBoxModel();
+            backupTime(previoust2[i],t2[i]);
+        }
+        
+    }
   
     public final void setDoctorName(String s){
       name = s;
