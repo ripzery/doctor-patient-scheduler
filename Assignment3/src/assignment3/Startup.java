@@ -89,10 +89,23 @@ import javax.swing.text.PlainDocument;
         });
         name.addKeyListener(new KeyAdapter(){
             @Override
-            public void keyPressed(KeyEvent e){
-                if(name.getText().equals("")&&e.getKeyCode()==KeyEvent.VK_ENTER){
+            public void keyPressed(KeyEvent e){                
+               char key = e.getKeyChar();
+               int key2 = e.getKeyCode();
+               if(key >='A' && key <= 'z'||(key == KeyEvent.VK_BACK_SPACE) 
+                       ||( key == KeyEvent.VK_DELETE)
+                       ||( key == KeyEvent.VK_ENTER)
+                       ||( key2 == KeyEvent.VK_SHIFT))
+                   e.setKeyChar(' ');
+               else{
+                   JOptionPane.showMessageDialog(pstart,"Please enter character only !","Error",JOptionPane.ERROR_MESSAGE);
+                   name.setText("");
+               } 
+               
+               if(name.getText().equals("")&&e.getKeyCode()==KeyEvent.VK_ENTER){
                     JOptionPane.showMessageDialog(pstart,"Please enter/choose your name !","Error",JOptionPane.ERROR_MESSAGE);   
-                }
+               }
+                
                 else if(e.getKeyCode()==KeyEvent.VK_ENTER){
                     throwName();
                 }
