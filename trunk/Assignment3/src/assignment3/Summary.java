@@ -28,11 +28,13 @@ public class Summary extends JFrame{
         getContentPane().setBackground(new Color(0x3e,0x60,0x6f));
         setVisible(true);
         setLayout(new MigLayout("debug,fillx"));
+        
         addComponent();
         addListener();
         
     }
     public void addComponent(){
+        
         heading = new JLabel ("Summary of Schedule");
         Font f = new Font("Arial",Font.BOLD,36);
         heading.setFont(f);
@@ -82,5 +84,11 @@ public class Summary extends JFrame{
     
     public void setDoctorFile(String name){
         filename = name;
+    }
+    
+    public void setDoctor(String name){
+        filename = name+".txt";
+        heading.setText("Summary of Dr."+filename.substring(0,filename.length()-4)+" Schedule");
+        heading.validate();
     }
 }
