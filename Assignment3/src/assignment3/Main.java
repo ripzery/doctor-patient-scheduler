@@ -320,9 +320,9 @@ public class Main extends JFrame {
             model[i] = new DefaultListModel();
         }
         patientList = new JList(model[0]);
-        patientList.setVisibleRowCount(5);
-        //scroll = new JScrollPane(patientList);
-        //scroll.add(patientList);
+        patientList.setVisibleRowCount(8);
+        scroll = new JScrollPane(patientList);
+        scroll.add(patientList);
         patientList.setFont(f);
         updateBox.add(patientList,"center,wrap");
         this.add(updateBox,"pos information.x2+10 information.y 770 information.y2");
@@ -352,7 +352,7 @@ public class Main extends JFrame {
                     }else checker = false;                    
                 }
                 
-                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")&&checker==true&&start.getItemCount()>0){
+                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")&&checker==true&&start.getItemCount()>0&&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
@@ -365,6 +365,12 @@ public class Main extends JFrame {
                     JOptionPane.showMessageDialog(informationBox,"Please enter schedule day !","Error",JOptionPane.ERROR_MESSAGE);
                 else if(start.getItemCount()==0&&e.getKeyCode()==KeyEvent.VK_ENTER){
                     JOptionPane.showMessageDialog(informationBox,"All time period has been reserved","Error",JOptionPane.ERROR_MESSAGE);
+                }
+                else if(!(sex[0].isSelected()||sex[1].isSelected())&&e.getKeyCode()==KeyEvent.VK_ENTER){
+                    JOptionPane.showMessageDialog(informationBox,"Please select sex.","Error",JOptionPane.ERROR_MESSAGE);
+                }
+                else if(agefield.getText().equals("")&&e.getKeyCode()==KeyEvent.VK_ENTER){
+                    JOptionPane.showMessageDialog(informationBox,"Please enter your age.","Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
