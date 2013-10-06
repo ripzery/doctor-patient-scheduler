@@ -15,6 +15,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -203,12 +205,7 @@ public class Main extends JFrame {
     
     private void removeEndTime(){
         int keymodel = 0;
-        for(int i=0;i<5;i++){
-            if(day[i].isSelected()){
-                keymodel = i;
-                break;
-            }
-        }
+        keymodel = getDay();
         restoreTime(previoust2[keymodel],t2[keymodel]);
         int count = 0;
         int a = convertTimetoInt((String)start.getSelectedItem());
@@ -228,6 +225,7 @@ public class Main extends JFrame {
         int oldmax = t2[keymodel].getSize();
         //System.out.println("Selected : "+a);
         for(int i=0;i<count;i++){
+            System.out.println("T2 removed "+t2[keymodel].getElementAt(oldmax-count));
             t2[keymodel].removeElementAt(oldmax-count);
         }
         count = 0;
@@ -268,12 +266,7 @@ public class Main extends JFrame {
         int index_a = start.getSelectedIndex();
         int index,keymodel=0;
         
-        for(int i=0;i<5;i++){
-            if(day[i].isSelected()){
-                keymodel = i;
-                break;
-            }
-        }
+        keymodel = getDay();
         
         for(int i=0;i<t2[keymodel].getSize();i++){
             index = convertTimetoInt((String)t2[keymodel].getElementAt(i));
@@ -294,7 +287,7 @@ public class Main extends JFrame {
         restoreTime(previoust1[keymodel],t1[keymodel]);
         restoreTime(previoust2[keymodel],t2[keymodel]);
         for(int i=0;i<count;i++){
-            //System.out.println("Remove"+">>"+t2.getElementAt(index_a));
+            System.out.println("T2 removed "+t2[keymodel].getElementAt(index_a));
             t2[keymodel].removeElementAt(index_a);
             t1[keymodel].removeElementAt(index_a);
         }
@@ -307,6 +300,90 @@ public class Main extends JFrame {
         String c = b[0]+b[1];
         int d = Integer.parseInt(c);
         return d;
+    }
+    
+    private void freeTime(ArrayList<String> update){
+        String[] a;
+        String TimeStart,TimeEnd;
+        int startcut=-2,endcut=-2,index=0;
+        
+        index = getDay();
+        
+        for(int i=0;i<update.size();i++){
+            startcut=-2;
+            endcut=-2;
+            a = update.get(i).split(" ");
+            TimeStart = a[0];
+            TimeEnd = a[2];
+            
+            //For add the time back to t1
+            for(int j=0;j<time.length;j++){
+                if(TimeStart.equals(time[j])){
+                    startcut = j;
+                }
+                else if(TimeEnd.equals(time[j])){
+                    endcut = j;
+                }
+                else if(TimeEnd.equals("16:00")){
+                    endcut = time.length;
+                }
+                if(startcut!=-2&&endcut!=-2)break;
+            }
+            
+            for(int j=startcut;j<endcut;j++){
+                t1[index].addElement(time[j]);
+            }
+            startcut = -2;
+            endcut = -2;
+            //For add the time back to t2
+            for(int j=0;j<time2.length;j++){
+                if(TimeStart.equals(time2[j])){
+                    startcut = j;
+                }
+                else if(TimeEnd.equals(time2[j])){
+                    endcut = j;
+                }
+                else if(TimeStart.equals(time[0])){
+                    startcut = -1;
+                }
+                if(startcut!=-2&&endcut!=-2)break;
+            }
+            
+            for(int j=endcut;j>startcut;j--){
+                System.out.println("T2 added "+time2[j]);
+                t2[index].addElement(time2[j]);
+            }
+            sortTime();
+            backupTime(previoust1[index],t1[index]);
+            backupTime(previoust2[index],t2[index]);
+        }
+    }
+    
+    private void sortTime(){
+        int index=0;
+        ArrayList<String> a = new ArrayList<>();
+        ArrayList<String> b = new ArrayList<>();
+        index = getDay();
+        
+        for(int i=0;i<t1[index].getSize();i++){
+            if(!a.contains((String)t1[index].getElementAt(i)))
+            a.add((String)t1[index].getElementAt(i));
+        }
+        for(int i=0;i<t2[index].getSize();i++){
+            if(!b.contains((String)t2[index].getElementAt(i)))
+            b.add((String)t2[index].getElementAt(i));
+        }
+        
+        Collections.sort(a);
+        Collections.sort(b);
+        t1[index].removeAllElements();
+        t2[index].removeAllElements();
+        for(int i=0;i<a.size();i++){
+            t1[index].addElement(a.get(i));
+        }
+        for(int i=0;i<b.size();i++){
+            t2[index].addElement(b.get(i));
+        }
     }
     
     private void addUpdateBox(){
@@ -479,14 +556,13 @@ public class Main extends JFrame {
         remove.addActionListener(new ActionListener(){
             int index=0;
             public void actionPerformed(ActionEvent e){
-                for(int i=0;i<model.length;i++){
-                    if(day[i].isSelected()){
-                        index = i;
-                        break;
+                if(!patientList.isSelectionEmpty()){
+                    index = getDay();
+                    freeTime((ArrayList<String>)patientList.getSelectedValuesList());
+                    for(int i=patientList.getSelectedIndices().length-1;i>=0;i--){
+                        startMeeting.remove(patientList.getSelectedIndices()[i]);
+                        model[index].removeElementAt(patientList.getSelectedIndices()[i]);
                     }
-                }
-                for(int i=patientList.getSelectedIndices().length-1;i>=0;i--){
-                    model[index].removeElementAt(patientList.getSelectedIndices()[i]);
                 }
             }
         });
@@ -529,6 +605,15 @@ public class Main extends JFrame {
         
     }
   
+    private int getDay(){
+        for(int i=0;i<day.length;i++){
+            if(day[i].isSelected()){
+                return i;
+            }
+        }
+        return 0;
+    }
+    
     public final void setDoctorName(String s){
       name = s;
       setTitle("Doctor "+name+" 's scheduler");
