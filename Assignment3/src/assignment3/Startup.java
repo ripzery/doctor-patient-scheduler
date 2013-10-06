@@ -11,7 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -30,6 +32,10 @@ import javax.swing.text.PlainDocument;
     private JTextField name;
     private Main main;
     private JLabel background;
+    private File folder;
+    private File[] listoffiles;
+    private String files;
+    private ArrayList<String> alldoctors;
     public Startup(){
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
@@ -56,16 +62,28 @@ import javax.swing.text.PlainDocument;
     }
     
     private void addComponents(){
-    
         name = new JTextField();
         name.setDocument(new JTextFieldLimit(10));
         entername = new JLabel("Enter your name: ");
-        choosename = new JLabel("Or choose exists name:");
+        choosename = new JLabel("Choose exists name:");
         heading = new JLabel("Doctor-Patients Scheduler");
         go = new JButton("GO!");
+        
+        alldoctors = new ArrayList<>();
+        folder = new File(System.getProperty("user.dir"));
+        listoffiles = folder.listFiles();
+        for(int i=0;i<listoffiles.length;i++){
+           if(listoffiles[i].isFile()){
+               files = listoffiles[i].getName();
+               if(files.endsWith(".txt")){
+                   alldoctors.add(files);
+               }
+           }
+        }
         combo = new JComboBox();
-        combo.addItem("TEST1");
-        combo.addItem("TEST2");
+        for(int i=0;i<alldoctors.size();i++){
+            combo.addItem(alldoctors.get(i).substring(0, alldoctors.get(i).length()-4));
+        }
                       
         name.setFocusable(true);
         name.setFont(new Font("Arial",Font.BOLD,40));
@@ -80,13 +98,13 @@ import javax.swing.text.PlainDocument;
         summary = new JButton("Go to Summary");
         summary.setFont(f);
         
-        background.add(heading,"gapright 120px,right,wrap 110px");
-        background.add(entername,"gapright 220px,right,wrap 10px");
-        background.add(name,"gapright 100px,right, width 40%,wrap 80px");
-        background.add(choosename,"gapleft 47%,id entername");
-        background.add(combo,"pos entername.x2+20 entername.y");              
-        background.add(go,"pos 400px 450px");
-        background.add(summary,"pos 500px 450px");
+        background.add(heading,"gapright 80px,right,wrap 70px");
+        background.add(entername,"gapright 180px,right,wrap 10px");
+        background.add(name,"gapright 60px,right, width 40%,wrap 40px");
+        background.add(choosename,"gapleft 54%,id entername,wrap 30px");
+        background.add(combo,"gapleft 60%");              
+        background.add(go,"pos 420px 440px");
+        background.add(summary,"pos 520px 440px");
     }
     
     private void addListener(){
@@ -151,7 +169,6 @@ import javax.swing.text.PlainDocument;
             main.setStartUp(this);
             this.dispose();
    }
-    
    // Use to limit number of character in JTextFields
    public class JTextFieldLimit extends PlainDocument {
         private int limit;
