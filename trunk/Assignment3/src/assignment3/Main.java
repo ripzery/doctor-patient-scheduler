@@ -578,6 +578,7 @@ public class Main extends JFrame {
                     sum.setVisible(true);
                 }
                 sum.setStartup(st);
+                sum.setDoctor(name);
                 Main.this.dispose();
             }
     });
