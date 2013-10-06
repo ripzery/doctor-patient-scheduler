@@ -32,7 +32,7 @@ import net.miginfocom.swing.MigLayout;
 public class Main extends JFrame {
     
     private static Startup startup;
-    private int width=800,height=600;
+    private int width=800,height=600,numberOfDay;
     private String name;
     private String[] time,bloodlist,time2;
     private JPanel TitleBar,allergyBox,informationBox,updateBox;
@@ -45,7 +45,7 @@ public class Main extends JFrame {
     private DefaultListModel[] model;
     private JScrollPane scroll;
     private DefaultComboBoxModel[] t1,t2,previoust1,previoust2;
-    private ArrayList<Integer> startMeeting = new ArrayList<>();//keep all the time when start meeting patient;
+    private ArrayList<ArrayList<Integer>> startMeetingDay;
     boolean checker = false,checker2 = false,checker3 = false;
     int i = 0;
         
@@ -204,36 +204,33 @@ public class Main extends JFrame {
      */
     
     private void removeEndTime(){
-        int keymodel = 0;
-        keymodel = getDay();
-        restoreTime(previoust2[keymodel],t2[keymodel]);
+        restoreTime(previoust2[numberOfDay],t2[numberOfDay]);
         int count = 0;
         int a = convertTimetoInt((String)start.getSelectedItem());
         /*
          * This will block the overlapping booking time case
          */
-        for(int i=0;i<startMeeting.size();i++){
-            if(a<startMeeting.get(i)){
-                for(int j=0;j<t2[keymodel].getSize();j++){
-                    if(convertTimetoInt((String)t2[keymodel].getElementAt(j))>startMeeting.get(i)){
+        for(int i=0;i<startMeetingDay.get(numberOfDay).size();i++){
+            if(a<startMeetingDay.get(numberOfDay).get(i)){
+                for(int j=0;j<t2[numberOfDay].getSize();j++){
+                    if(convertTimetoInt((String)t2[numberOfDay].getElementAt(j))>startMeetingDay.get(numberOfDay).get(i)){
                       count++;  
                     }
                 }
                 break;
             }
         }
-        int oldmax = t2[keymodel].getSize();
-        //System.out.println("Selected : "+a);
+        int oldmax = t2[numberOfDay].getSize();
         for(int i=0;i<count;i++){
-            System.out.println("T2 removed "+t2[keymodel].getElementAt(oldmax-count));
-            t2[keymodel].removeElementAt(oldmax-count);
+            //System.out.println("T2 removed "+t2[numberOfDay].getElementAt(oldmax-count));
+            t2[numberOfDay].removeElementAt(oldmax-count);
         }
         count = 0;
         /*
          * This will block the end time that lower than the start time that cannot be possible
          */
-        for(int i=0;i<t2[keymodel].getSize();i++){
-            if(a>=(convertTimetoInt((String)t2[keymodel].getElementAt(i)))){
+        for(int i=0;i<t2[numberOfDay].getSize();i++){
+            if(a>=(convertTimetoInt((String)t2[numberOfDay].getElementAt(i)))){
                 count++;
             }
             else{
@@ -241,7 +238,7 @@ public class Main extends JFrame {
             }
         }
         for(int i=0;i<count;i++){
-            t2[keymodel].removeElementAt(0);
+            t2[numberOfDay].removeElementAt(0);
         }
     }
     
@@ -266,10 +263,8 @@ public class Main extends JFrame {
         int index_a = start.getSelectedIndex();
         int index,keymodel=0;
         
-        keymodel = getDay();
-        
-        for(int i=0;i<t2[keymodel].getSize();i++){
-            index = convertTimetoInt((String)t2[keymodel].getElementAt(i));
+        for(int i=0;i<t2[numberOfDay].getSize();i++){
+            index = convertTimetoInt((String)t2[numberOfDay].getElementAt(i));
             if(index>=a&&index<=b){
                 count++;
             }
@@ -282,17 +277,17 @@ public class Main extends JFrame {
          * to check the period that possible to booking(record).
          * So, the solution is remove all impossible time in the combobox(time cannot be overlapped).
          */
-        startMeeting.add(a);
-        Collections.sort(startMeeting);
-        restoreTime(previoust1[keymodel],t1[keymodel]);
-        restoreTime(previoust2[keymodel],t2[keymodel]);
+        startMeetingDay.get(numberOfDay).add(a);
+        Collections.sort(startMeetingDay.get(numberOfDay));
+        restoreTime(previoust1[numberOfDay],t1[numberOfDay]);
+        restoreTime(previoust2[numberOfDay],t2[numberOfDay]);
         for(int i=0;i<count;i++){
-            System.out.println("T2 removed "+t2[keymodel].getElementAt(index_a));
-            t2[keymodel].removeElementAt(index_a);
-            t1[keymodel].removeElementAt(index_a);
+            //System.out.println("T2 removed "+t2[numberOfDay].getElementAt(index_a));
+            t2[numberOfDay].removeElementAt(index_a);
+            t1[numberOfDay].removeElementAt(index_a);
         }
-        backupTime(previoust1[keymodel],t1[keymodel]);
-        backupTime(previoust2[keymodel],t2[keymodel]);
+        backupTime(previoust1[numberOfDay],t1[numberOfDay]);
+        backupTime(previoust2[numberOfDay],t2[numberOfDay]);
     }
     
     private int convertTimetoInt(String time){
@@ -306,8 +301,6 @@ public class Main extends JFrame {
         String[] a;
         String TimeStart,TimeEnd;
         int startcut=-2,endcut=-2,index=0;
-        
-        index = getDay();
         
         for(int i=0;i<update.size();i++){
             startcut=-2;
@@ -331,7 +324,7 @@ public class Main extends JFrame {
             }
             
             for(int j=startcut;j<endcut;j++){
-                t1[index].addElement(time[j]);
+                t1[numberOfDay].addElement(time[j]);
             }
             startcut = -2;
             endcut = -2;
@@ -350,39 +343,37 @@ public class Main extends JFrame {
             }
             
             for(int j=endcut;j>startcut;j--){
-                System.out.println("T2 added "+time2[j]);
-                t2[index].addElement(time2[j]);
+                //System.out.println("T2 added "+time2[j]);
+                t2[numberOfDay].addElement(time2[j]);
             }
             sortTime();
-            backupTime(previoust1[index],t1[index]);
-            backupTime(previoust2[index],t2[index]);
+            backupTime(previoust1[numberOfDay],t1[numberOfDay]);
+            backupTime(previoust2[numberOfDay],t2[numberOfDay]);
         }
     }
     
     private void sortTime(){
-        int index=0;
         ArrayList<String> a = new ArrayList<>();
         ArrayList<String> b = new ArrayList<>();
-        index = getDay();
         
-        for(int i=0;i<t1[index].getSize();i++){
-            if(!a.contains((String)t1[index].getElementAt(i)))
-            a.add((String)t1[index].getElementAt(i));
+        for(int i=0;i<t1[numberOfDay].getSize();i++){
+            if(!a.contains((String)t1[numberOfDay].getElementAt(i)))
+            a.add((String)t1[numberOfDay].getElementAt(i));
         }
-        for(int i=0;i<t2[index].getSize();i++){
-            if(!b.contains((String)t2[index].getElementAt(i)))
-            b.add((String)t2[index].getElementAt(i));
+        for(int i=0;i<t2[numberOfDay].getSize();i++){
+            if(!b.contains((String)t2[numberOfDay].getElementAt(i)))
+            b.add((String)t2[numberOfDay].getElementAt(i));
         }
         
         Collections.sort(a);
         Collections.sort(b);
-        t1[index].removeAllElements();
-        t2[index].removeAllElements();
+        t1[numberOfDay].removeAllElements();
+        t2[numberOfDay].removeAllElements();
         for(int i=0;i<a.size();i++){
-            t1[index].addElement(a.get(i));
+            t1[numberOfDay].addElement(a.get(i));
         }
         for(int i=0;i<b.size();i++){
-            t2[index].addElement(b.get(i));
+            t2[numberOfDay].addElement(b.get(i));
         }
     }
     
@@ -543,12 +534,12 @@ public class Main extends JFrame {
     });
         
         for(int i=0;i<model.length;i++){
-            final int index = i;
             day[i].addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    patientList.setModel(model[index]);
-                    start.setModel(t1[index]);
-                    end.setModel(t2[index]);
+                    numberOfDay = getDay();
+                    patientList.setModel(model[numberOfDay]);
+                    start.setModel(t1[numberOfDay]);
+                    end.setModel(t2[numberOfDay]);
                 }
         });
         }
@@ -557,11 +548,10 @@ public class Main extends JFrame {
             int index=0;
             public void actionPerformed(ActionEvent e){
                 if(!patientList.isSelectionEmpty()){
-                    index = getDay();
                     freeTime((ArrayList<String>)patientList.getSelectedValuesList());
                     for(int i=patientList.getSelectedIndices().length-1;i>=0;i--){
-                        startMeeting.remove(patientList.getSelectedIndices()[i]);
-                        model[index].removeElementAt(patientList.getSelectedIndices()[i]);
+                        startMeetingDay.get(numberOfDay).remove(patientList.getSelectedIndices()[i]);
+                        model[numberOfDay].removeElementAt(patientList.getSelectedIndices()[i]);
                     }
                 }
             }
@@ -569,6 +559,11 @@ public class Main extends JFrame {
   }
     
     private void initTime(){
+        startMeetingDay = new ArrayList<>();
+        for(int i=0;i<5;i++){
+            startMeetingDay.add(new ArrayList<Integer>());
+        }
+        
         time = new String[]{"08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30"
                 ,"12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30"};
         t1 = new DefaultComboBoxModel[5];
