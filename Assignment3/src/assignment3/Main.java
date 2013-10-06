@@ -13,9 +13,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +37,7 @@ public class Main extends JFrame {
     
     private static Startup startup;
     private int width=800,height=600,numberOfDay;
-    private String name;
+    private String name,tname,name2;
     private String[] time,bloodlist,time2;
     private JPanel TitleBar,allergyBox,informationBox,updateBox;
     private JCheckBox[] day,sex;
@@ -46,8 +50,8 @@ public class Main extends JFrame {
     private JScrollPane scroll;
     private DefaultComboBoxModel[] t1,t2,previoust1,previoust2;
     private ArrayList<ArrayList<Integer>> startMeetingDay;
-    boolean checker = false,checker2 = false,checker3 = false;
-    int i = 0;
+    boolean checker = false,checker2 = false,checker3 = false,checker4 = false;
+    int i = 0,j = 0;
         
     public Main(String name){        
         this.setDoctorName(name);
@@ -61,6 +65,13 @@ public class Main extends JFrame {
         
         getContentPane().setBackground(new Color(0x3e,0x60,0x6f));
         
+        this.addWindowListener(new WindowAdapter() {
+        public void windowClosing(WindowEvent e) {
+            checker4 = true;
+            System.out.print("close");
+        }
+
+    });
         setVisible(true);
     }
     
@@ -159,7 +170,7 @@ public class Main extends JFrame {
         agefield = new JTextField(2);
         agefield.setDocument(new JTextFieldLimit(2));
         lage.setFont(f);
-        lsex.setFont(f);
+        lsex.setFont(f);        
         
         informationBox.add(patientName,"grow");
         informationBox.add(namefield,"gapx unrel unrel,wrap 30px");
@@ -486,7 +497,7 @@ public class Main extends JFrame {
                     }else checker = false;                    
                 }
                 //LOOP for sex
-                for(int j =0;j<2;j++){
+                for(j =0;j<2;j++){
                     if(sex[j].isSelected()){
                         checker2 = true;
                         break;
@@ -499,8 +510,39 @@ public class Main extends JFrame {
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
+                    tname = namefield.getText();
                     namefield.setText("");
                     model[index].addElement(name);
+                File log = new File(name2+".txt");
+                try{
+                    FileWriter writer = new FileWriter(log,true);
+                    ArrayList<String> plist = new ArrayList<>();
+                    String pinfo = day[i].getText()+" "+starttime+" "+endtime+" "+tname+" "+sex[j].getText()+" "+agefield.getText()+"\r\n";
+                    
+                    BufferedWriter buffer = new BufferedWriter(writer);                    
+                    plist.add(pinfo);
+                    Iterator<String> iter  = plist.iterator();
+                    while(iter.hasNext()){
+                        buffer.write(iter.next());  
+                        System.out.print("Write");
+                    }
+                    buffer.close();  
+                    
+                      
+                    }
+                catch (IOException ex){System.out.print("ex");}
+                 
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     /*
                      * Handling about time period in the combobox that has been chosen
                      */
@@ -517,7 +559,7 @@ public class Main extends JFrame {
                 }
             }
         });
-        
+           
         clear.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 bg.clearSelection();
@@ -611,6 +653,7 @@ public class Main extends JFrame {
     
     public final void setDoctorName(String s){
       name = s;
+      name2 = s;
       setTitle("Doctor "+name+" 's scheduler");
       startup.dispose();
     }
