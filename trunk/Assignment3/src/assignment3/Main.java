@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package assignment3;
 
 import java.awt.*;
@@ -51,9 +47,9 @@ public class Main extends JFrame {
     private JScrollPane scroll;
     private DefaultComboBoxModel[] t1,t2,previoust1,previoust2;
     private ArrayList<ArrayList<Integer>> startMeetingDay;
+    boolean checker = false,checker2 = false,checker3 = false;
     private Summary sum;
     private Startup st;
-    boolean checker = false,checker2 = false,checker3 = false,checker4 = false;
     int i = 0,j = 0;
     private ArrayList<String> plist = new ArrayList<>();
         
@@ -64,18 +60,23 @@ public class Main extends JFrame {
         addComponent();
         addListener();
         
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(320,70,width,height);
         
         getContentPane().setBackground(new Color(0x3e,0x60,0x6f));
         
-        this.addWindowListener(new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
+        @Override        
         public void windowClosing(WindowEvent e) {
-            checker4 = true;
-            System.out.print("close");
+            
+            int dialog = JOptionPane.showConfirmDialog(null, "Are you sure? Data may be conflicted.", "WARNING",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+            if (dialog == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            } else if(dialog == JOptionPane.NO_OPTION){}
         }
 
     });
+        
         setVisible(true);
     }
     
