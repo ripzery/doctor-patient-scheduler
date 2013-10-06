@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
@@ -50,6 +51,8 @@ public class Main extends JFrame {
     private JScrollPane scroll;
     private DefaultComboBoxModel[] t1,t2,previoust1,previoust2;
     private ArrayList<ArrayList<Integer>> startMeetingDay;
+    private Summary sum;
+    private Startup st;
     boolean checker = false,checker2 = false,checker3 = false,checker4 = false;
     int i = 0,j = 0;
     private ArrayList<String> plist = new ArrayList<>();
@@ -418,7 +421,7 @@ public class Main extends JFrame {
         namefield.addKeyListener(new KeyAdapter(){
             String starttime,endtime;
             int index;
-            public void keyPressed(KeyEvent e){                
+            public void keyPressed(KeyEvent e){
                char key = e.getKeyChar();
                int key2 = e.getKeyCode();
                if(key >='A' && key <= 'z'||(key == KeyEvent.VK_BACK_SPACE) 
@@ -442,8 +445,13 @@ public class Main extends JFrame {
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
+                    tname = namefield.getText();
                     namefield.setText("");
                     model[index].addElement(name);
+                    
+                    String pinfo = day[i].getText().trim()+" "+starttime+" "+endtime+" "+tname+" "+sex[j].getText().trim()+" "+agefield.getText()+"\r\n";
+                    plist.add(pinfo);
+                    
                     removeChosenTime();
                 }else if(namefield.getText().equals("")&&e.getKeyCode()==KeyEvent.VK_ENTER){
                     JOptionPane.showMessageDialog(informationBox,"Please enter patient name's !","Error",JOptionPane.ERROR_MESSAGE); 
@@ -516,7 +524,7 @@ public class Main extends JFrame {
                     model[index].addElement(name);
                     
                     
-                    String pinfo = day[i].getText()+" "+starttime+" "+endtime+" "+tname+" "+sex[j].getText()+" "+agefield.getText()+"\r\n";
+                    String pinfo = day[i].getText().trim()+" "+starttime+" "+endtime+" "+tname+" "+sex[j].getText().trim()+" "+agefield.getText()+"\r\n";
                     plist.add(pinfo);
                     
                     /*
@@ -547,7 +555,7 @@ public class Main extends JFrame {
         
         finish.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-
+                
                 File log = new File(name2+".txt");
                 try{
                     FileWriter writer = new FileWriter(log,true);
@@ -563,7 +571,13 @@ public class Main extends JFrame {
                     }
                 catch (IOException ex){System.out.print("ex");}
                 
-             new Summary();   
+                if(sum==null){
+                    sum = new Summary();
+                }else{
+                    sum.setVisible(true);
+                }
+                sum.setStartup(st);
+                Main.this.dispose();
             }
     });
         
@@ -648,6 +662,14 @@ public class Main extends JFrame {
       name2 = s;
       setTitle("Doctor "+name+" 's scheduler");
       startup.dispose();
+    }
+    
+    public void setSummary(Summary sum){
+        this.sum = sum;
+    }
+    
+    public void setStartUp(Startup start){
+        st = start;
     }
     
     // Use to limit number of character in JTextFields
