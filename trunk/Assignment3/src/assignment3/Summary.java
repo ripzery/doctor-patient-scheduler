@@ -47,17 +47,7 @@ public class Summary extends JFrame{
         day.setFont(d);
         add(day,"wrap 20px,center");
         
-        spd = new JPanel(new MigLayout());
         
-        Schedule = new JPanel(new MigLayout());
-        Schedule.setBackground(Color.yellow);
-        spd.add(Schedule,"width 300px,height 300px");
-        
-        Desc = new JPanel(new MigLayout());
-        Desc.setBackground(Color.RED);
-        spd.add(Desc,"gapx 30px,width 300px, height 300px");
-        spd.setOpaque(false);
-        add(spd,"center,wrap 20px");
         
         gostartup = new JButton("Back to Home Screen");
         Font g = new Font("Arial",Font.BOLD,20);
@@ -80,10 +70,6 @@ public class Summary extends JFrame{
     
     public void setStartup(Startup a){
         start = a;
-    }
-    
-    public void setDoctorFile(String name){
-        filename = name;
     }
     
     public void setDoctor(String name){
