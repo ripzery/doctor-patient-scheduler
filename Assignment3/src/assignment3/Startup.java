@@ -150,6 +150,7 @@ import javax.swing.text.PlainDocument;
                 }else{
                     sum.setVisible(true);
                 }
+                    sum.setDoctor((String)combo.getSelectedItem());
                     sum.setStartup(Startup.this);
                     sum.setDoctorFile(go.getText()+".txt");
                     Startup.this.dispose();
