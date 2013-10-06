@@ -152,7 +152,7 @@ import javax.swing.text.PlainDocument;
                 }
                     sum.setDoctor((String)combo.getSelectedItem());
                     sum.setStartup(Startup.this);
-                    sum.setDoctorFile(go.getText()+".txt");
+                    sum.setDoctor(go.getText());
                     Startup.this.dispose();
             }
         });
