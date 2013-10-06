@@ -52,6 +52,7 @@ public class Main extends JFrame {
     private ArrayList<ArrayList<Integer>> startMeetingDay;
     boolean checker = false,checker2 = false,checker3 = false,checker4 = false;
     int i = 0,j = 0;
+    private ArrayList<String> plist = new ArrayList<>();
         
     public Main(String name){        
         this.setDoctorName(name);
@@ -513,35 +514,10 @@ public class Main extends JFrame {
                     tname = namefield.getText();
                     namefield.setText("");
                     model[index].addElement(name);
-                File log = new File(name2+".txt");
-                try{
-                    FileWriter writer = new FileWriter(log,true);
-                    ArrayList<String> plist = new ArrayList<>();
+                    
+                    
                     String pinfo = day[i].getText()+" "+starttime+" "+endtime+" "+tname+" "+sex[j].getText()+" "+agefield.getText()+"\r\n";
-                    
-                    BufferedWriter buffer = new BufferedWriter(writer);                    
                     plist.add(pinfo);
-                    Iterator<String> iter  = plist.iterator();
-                    while(iter.hasNext()){
-                        buffer.write(iter.next());  
-                        System.out.print("Write");
-                    }
-                    buffer.close();  
-                    
-                      
-                    }
-                catch (IOException ex){System.out.print("ex");}
-                 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
                     
                     /*
                      * Handling about time period in the combobox that has been chosen
@@ -571,6 +547,22 @@ public class Main extends JFrame {
         
         finish.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+
+                File log = new File(name2+".txt");
+                try{
+                    FileWriter writer = new FileWriter(log,true);
+                    BufferedWriter buffer = new BufferedWriter(writer);
+                    Iterator<String> iter  = plist.iterator();
+                    while(iter.hasNext()){
+                        buffer.write(iter.next());  
+                        System.out.print("Write");
+                    }
+                    buffer.close();  
+                    
+                      
+                    }
+                catch (IOException ex){System.out.print("ex");}
+                
              new Summary();   
             }
     });
