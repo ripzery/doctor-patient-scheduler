@@ -37,7 +37,7 @@ public class Main extends JFrame {
     private JCheckBox[] day,sex;
     private JTextField namefield,agefield;
     private JComboBox start,end,blood;
-    private JButton insert,clear,finish,change;
+    private JButton insert,clear,finish,change,remove;
     private JList patientList;
     private ButtonGroup bg,sexbg;
     private DefaultListModel[] model;
@@ -315,6 +315,8 @@ public class Main extends JFrame {
         JLabel heading = new JLabel("Patient Added");
         heading.setFont(f);
         updateBox.add(heading,"center,wrap 10px");
+        
+        
         model = new DefaultListModel[5];
         for(int i=0;i<model.length;i++){
             model[i] = new DefaultListModel();
@@ -323,7 +325,12 @@ public class Main extends JFrame {
         patientList.setVisibleRowCount(8);
         patientList.setFont(f);
         scroll = new JScrollPane(patientList);
-        updateBox.add(scroll,"center,height 280px,wrap");
+        updateBox.add(scroll,"center,height 280px,wrap 20px");
+        
+        remove = new JButton("Remove");
+        remove.setFont(f);
+        updateBox.add(remove,"center");
+        
         this.add(updateBox,"pos information.x2+10 information.y 770 information.y2");
     }
     
@@ -420,7 +427,7 @@ public class Main extends JFrame {
                 /*
                  * So, we need to store the day which selected in somewhere around here to prepare record to the file.
                  */
-                if(!namefield.getText().equals("") && checker==true && checker2==true){
+                if(!namefield.getText().equals("") && checker==true && checker2==true &&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
@@ -434,6 +441,12 @@ public class Main extends JFrame {
                     JOptionPane.showMessageDialog(informationBox,"Please enter patient name's !","Error",JOptionPane.ERROR_MESSAGE); 
                 }else if(checker == false)
                     JOptionPane.showMessageDialog(informationBox,"Please enter schedule day !","Error",JOptionPane.ERROR_MESSAGE);
+                else if(!(sex[0].isSelected()||sex[1].isSelected())){
+                    JOptionPane.showMessageDialog(informationBox,"Please select sex.","Error",JOptionPane.ERROR_MESSAGE);
+                }
+                else if(agefield.getText().equals("")){
+                    JOptionPane.showMessageDialog(informationBox,"Please enter your age.","Error",JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         
@@ -462,6 +475,21 @@ public class Main extends JFrame {
                 }
         });
         }
+        
+        remove.addActionListener(new ActionListener(){
+            int index=0;
+            public void actionPerformed(ActionEvent e){
+                for(int i=0;i<model.length;i++){
+                    if(day[i].isSelected()){
+                        index = i;
+                        break;
+                    }
+                }
+                for(int i=patientList.getSelectedIndices().length-1;i>=0;i--){
+                    model[index].removeElementAt(patientList.getSelectedIndices()[i]);
+                }
+            }
+        });
   }
     
     private void initTime(){
