@@ -321,10 +321,9 @@ public class Main extends JFrame {
         }
         patientList = new JList(model[0]);
         patientList.setVisibleRowCount(8);
-        scroll = new JScrollPane(patientList);
-        scroll.add(patientList);
         patientList.setFont(f);
-        updateBox.add(patientList,"center,wrap");
+        scroll = new JScrollPane(patientList);
+        updateBox.add(scroll,"center,height 280px,wrap");
         this.add(updateBox,"pos information.x2+10 information.y 770 information.y2");
     }
     
