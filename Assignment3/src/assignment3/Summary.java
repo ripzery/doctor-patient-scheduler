@@ -6,10 +6,6 @@ package assignment3;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 /**
@@ -19,10 +15,11 @@ import net.miginfocom.swing.MigLayout;
 public class Summary extends JFrame{
     
     private JLabel heading;
-    private JPanel heading_bar;
     private JComboBox day,doctor;
     private JPanel Schedule,Desc,spd;
-    private JButton back;
+    private JButton gostartup;
+    private Startup start;
+    private String filename;
     String[] weekdays= new String[]{"Monday","Tuesday","Wednesday","Thursday","Friday"};
     
     public Summary(){
@@ -60,17 +57,30 @@ public class Summary extends JFrame{
         spd.setOpaque(false);
         add(spd,"center,wrap 20px");
         
-        back = new JButton("Back to Home Screen");
+        gostartup = new JButton("Back to Home Screen");
         Font g = new Font("Arial",Font.BOLD,20);
-        back.setFont(g);
-        add(back,"center");
+        gostartup.setFont(g);
+        add(gostartup,"center");
     }
     
     public void addListener(){
-        back.addActionListener(new ActionListener(){
+        gostartup.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-             new Startup();   
+                if(start==null){
+                    start = new Startup();
+                }else{
+                    start.setVisible(true);
+                }
+                Summary.this.dispose();
             }
     });
+    }
+    
+    public void setStartup(Startup a){
+        start = a;
+    }
+    
+    public void setDoctorFile(String name){
+        filename = name;
     }
 }

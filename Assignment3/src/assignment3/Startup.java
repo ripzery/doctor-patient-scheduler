@@ -23,8 +23,9 @@ import javax.swing.text.PlainDocument;
  */
     class Startup extends JFrame{
     private JPanel pstart;
-    private JLabel l1,l2,l3;
-    private JButton b1;
+    private JLabel heading,choosename,entername;
+    private JButton go,summary;
+    private Summary sum;
     private JComboBox combo;
     private JTextField name;
     private Main main;
@@ -58,10 +59,10 @@ import javax.swing.text.PlainDocument;
     
         name = new JTextField();
         name.setDocument(new JTextFieldLimit(10));
-        l3 = new JLabel("Enter your name: ");
-        l2 = new JLabel("Or choose exists name:");
-        l1 = new JLabel("Doctor-Patients Scheduler");
-        b1 = new JButton("GO!");
+        entername = new JLabel("Enter your name: ");
+        choosename = new JLabel("Or choose exists name:");
+        heading = new JLabel("Doctor-Patients Scheduler");
+        go = new JButton("GO!");
         combo = new JComboBox();
         combo.addItem("TEST1");
         combo.addItem("TEST2");
@@ -71,21 +72,25 @@ import javax.swing.text.PlainDocument;
         combo.setFont(new Font("Arial",Font.BOLD,20));  
         
         Font f = new Font("Arial",Font.BOLD,23);  
-        l1.setFont(f);
-        l2.setFont(f);
-        l3.setFont(f);
-        b1.setFont(f);
+        heading.setFont(f);
+        choosename.setFont(f);
+        entername.setFont(f);
+        go.setFont(f);
         
-        background.add(l1,"gapright 120px,right,wrap 110px");
-        background.add(l3,"gapright 220px,right,wrap 10px");
+        summary = new JButton("Go to Summary");
+        summary.setFont(f);
+        
+        background.add(heading,"gapright 120px,right,wrap 110px");
+        background.add(entername,"gapright 220px,right,wrap 10px");
         background.add(name,"gapright 100px,right, width 40%,wrap 80px");
-        background.add(l2,"gapleft 47%,id l3");
-        background.add(combo,"pos l3.x2+20 l3.y");              
-        background.add(b1,"pos 500px 490px");
+        background.add(choosename,"gapleft 47%,id entername");
+        background.add(combo,"pos entername.x2+20 entername.y");              
+        background.add(go,"pos 400px 450px");
+        background.add(summary,"pos 500px 450px");
     }
     
     private void addListener(){
-        b1.addActionListener(new ActionListener(){
+        go.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 if(name.getText().equals("")){
@@ -119,7 +124,19 @@ import javax.swing.text.PlainDocument;
                 }
             }
         });        
-
+        summary.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                if(sum==null){
+                    sum = new Summary();
+                    
+                }else{
+                    sum.setVisible(true);
+                }
+                    sum.setStartup(Startup.this);
+                    sum.setDoctorFile(go.getText()+".txt");
+                    Startup.this.dispose();
+            }
+        });
         
     }
     
@@ -130,6 +147,9 @@ import javax.swing.text.PlainDocument;
         else{
             main.setVisible(true);
         }
+            main.setSummary(sum);
+            main.setStartUp(this);
+            this.dispose();
    }
     
    // Use to limit number of character in JTextFields
