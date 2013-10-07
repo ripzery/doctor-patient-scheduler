@@ -79,7 +79,6 @@ public class Main extends JFrame {
         }
 
     });
-        
         setVisible(true);
     }
     
@@ -676,7 +675,7 @@ public class Main extends JFrame {
       name2 = s;
       setTitle("Doctor "+name+" 's scheduler");
       if(title!=null){
-          title.setText("Dr. "+name+" 's scheduler");
+          title.setText("Dr. "+name+" 's schedule");
       }
       startup.dispose();
     }
@@ -739,4 +738,5 @@ public class Main extends JFrame {
             }
           }
       }
+   
 }

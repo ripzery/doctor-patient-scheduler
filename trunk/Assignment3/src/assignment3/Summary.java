@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ public class Summary extends JFrame{
     private JLabel heading;
     private JComboBox day,doctor;
     private JPanel button;
-    private JButton gostartup,sorting;
+    private JButton gostartup,sorting,sorting2;
     private Startup start;
     private String filename;
     private File file;
@@ -94,6 +95,10 @@ public class Summary extends JFrame{
         sorting = new JButton("Sort by time!");
         sorting.setFont(new Font("Arial",Font.BOLD,20));
         button.add(sorting);
+        
+        sorting2 = new JButton("Sort by age!");
+        sorting2.setFont(new Font("Arial",Font.BOLD,20));
+        button.add(sorting2);
         add(button,"center");
     }
     
@@ -120,6 +125,12 @@ public class Summary extends JFrame{
         sorting.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 sortTime();
+            }
+        });
+        
+        sorting2.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                sortAge();
             }
         });
     }
@@ -176,7 +187,7 @@ public class Summary extends JFrame{
         }
     }
     
-    public void sortTime(){
+    public void sortTime(){        
         ArrayList<String> time = new ArrayList<>();
         ArrayList<String> sort = new ArrayList<>();
             for(int i=0;i<table[dayindex].getRowCount();i++){
@@ -202,11 +213,56 @@ public class Summary extends JFrame{
             sort.clear();
     }
     
+    public void sortAge(){
+        class temp implements Comparable
+        {
+            int age;
+            String name;
+            public temp(String age, String name)
+            {
+                this.age = Integer.parseInt(age);
+                this.name = name;
+            }
+            public int getAge()
+            { return age; }
+            public String getName()
+            { return name; }
+            public int compareTo(Object O)
+            {
+                temp cast = (temp) O;
+                return age - cast.age;
+                
+            }
+        }
+        ArrayList<temp> data = new ArrayList<>();
+        ArrayList<String> allLine = new ArrayList<>();
+        for(int i=0;i<table[dayindex].getRowCount();i++){
+            data.add( new temp((String)(table[dayindex].getValueAt(i, 6)), (String)(table[dayindex].getValueAt(i, 3))));
+        }
+            
+        Collections.sort(data);
+
+            for(int k=0;k<data.size();k++){
+                for(int i=0;i<table[dayindex].getRowCount();i++){
+                    if((String.valueOf(data.get(k).getAge())).equals(row.get(dayindex).get(i).split(" ")[6]) && data.get(k).getName().equals(row.get(dayindex).get(i).split(" ")[3])){                                                     
+                        allLine.add(row.get(dayindex).get(i));                            
+                    }
+                }
+            }
+            
+            for(int i=table[dayindex].getRowCount()-1;i>=0;i--){
+                table[dayindex].removeRow(i);           
+            }
+            for(int i=0;i<allLine.size();i++){
+                table[dayindex].addRow(allLine.get(i).split(" ")); 
+            }
+    }
+    
     public void removeRowAllTable(){
         for(int j=0;j<table.length;j++){
             for(int i=table[j].getRowCount()-1;i>=0;i--){
                 table[j].removeRow(i);
             }
         }
-    }
+    }   
 }
