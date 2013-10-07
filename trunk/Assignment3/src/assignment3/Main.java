@@ -403,7 +403,7 @@ public class Main extends JFrame {
     
     private void addUpdateBox(){
         Font f = new Font("Arial",Font.BOLD,20);  
-        updateBox = new JPanel(new MigLayout("fillx,debug"));
+        updateBox = new JPanel(new MigLayout("fillx"));
         JLabel heading = new JLabel("Patient Added");
         heading.setFont(f);
         updateBox.add(heading,"center,wrap 10px");
@@ -415,7 +415,7 @@ public class Main extends JFrame {
         }
         patientList = new JList(model[0]);
         patientList.setVisibleRowCount(8);
-        patientList.setFont(f);
+        patientList.setFont(new Font("Arial",Font.BOLD,16));
         scroll = new JScrollPane(patientList);
         updateBox.add(scroll,"center,height 280px,wrap 20px");
         
@@ -453,7 +453,7 @@ public class Main extends JFrame {
                 if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")&&checker==true&&start.getItemCount()>0&&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
-                    name = starttime+" - "+endtime+" "+namefield.getText();
+                    name = starttime+" - "+endtime+"  "+namefield.getText();
                     tname = namefield.getText();
                     namefield.setText("");
                     model[index].addElement(name);
