@@ -27,7 +27,8 @@ public class Summary extends JFrame{
     
     private JLabel heading;
     private JComboBox day,doctor;
-    private JButton gostartup;
+    private JPanel button;
+    private JButton gostartup,sorting;
     private Startup start;
     private String filename;
     private File file;
@@ -82,10 +83,18 @@ public class Summary extends JFrame{
         tb.setForeground(Color.blue);
         tb.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         
+        button = new JPanel();
+        button.setOpaque(false);
+        
         gostartup = new JButton("Back to Home Screen");
         Font g = new Font("Arial",Font.BOLD,20);
         gostartup.setFont(g);
-        add(gostartup,"center");
+        button.add(gostartup);
+        
+        sorting = new JButton("Sort by time!");
+        sorting.setFont(new Font("Arial",Font.BOLD,20));
+        button.add(sorting);
+        add(button,"center");
     }
     
     public void addListener(){
@@ -105,6 +114,12 @@ public class Summary extends JFrame{
             public void itemStateChanged(ItemEvent e){
                 dayindex = day.getSelectedIndex();
                 tb.setModel(table[dayindex]);
+            }
+        });
+        
+        sorting.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                sortTime();
             }
         });
     }
@@ -159,37 +174,32 @@ public class Summary extends JFrame{
             } catch (FileNotFoundException ex) {
             Logger.getLogger(Summary.class.getName()).log(Level.SEVERE, null, ex);
         }
-        sortTime();
     }
     
     public void sortTime(){
         ArrayList<String> time = new ArrayList<>();
         ArrayList<String> sort = new ArrayList<>();
-        for(int j=0;j<table.length;j++){
-            
-            for(int i=0;i<table[j].getRowCount();i++){
-                time.add((String)table[j].getValueAt(i, 1));
+            for(int i=0;i<table[dayindex].getRowCount();i++){
+                time.add((String)table[dayindex].getValueAt(i, 1));
             }
-            
             Collections.sort(time);
-            //while(sort.size()<row.get(j).size()){
+            //while(sort.size()<row.get(dayindex).size()){
                 for(int k=0;k<time.size();k++){
-                    for(int i=0;i<table[j].getRowCount();i++){
-                        if(time.get(k).equals(row.get(j).get(i).split(" ")[1])){
-                            sort.add(row.get(j).get(i));
+                    for(int i=0;i<table[dayindex].getRowCount();i++){
+                        if(time.get(k).equals(row.get(dayindex).get(i).split(" ")[1])){
+                            sort.add(row.get(dayindex).get(i));
                         }
                     }
                 }
             //}
-            for(int i=table[j].getRowCount()-1;i>=0;i--){
-                table[j].removeRow(i);
+            for(int i=table[dayindex].getRowCount()-1;i>=0;i--){
+                table[dayindex].removeRow(i);
             }
             for(int i=0;i<sort.size();i++){
-                table[j].addRow(sort.get(i).split(" "));
+                table[dayindex].addRow(sort.get(i).split(" "));
             }
             time.clear();
             sort.clear();
-        }
     }
     
     public void removeRowAllTable(){
