@@ -432,6 +432,7 @@ public class Main extends JFrame {
         namefield.addKeyListener(new KeyAdapter(){
             String starttime,endtime;
             int index;
+            boolean dupname;
             public void keyPressed(KeyEvent e){
                char key = e.getKeyChar();
                int key2 = e.getKeyCode();
@@ -450,8 +451,14 @@ public class Main extends JFrame {
                         break;
                     }else checker = false;                    
                 }
+                dupname = false;
+                for(int i=0;i<plist.size();i++){
+                    if(plist.get(i).split(" ")[3].equals(namefield.getText())&&day[numberOfDay].getText().trim().equals(plist.get(i).split(" ")[0])){
+                        dupname = true;break;
+                    }
+                }
                 
-                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")&&checker&&start.getItemCount()>0&&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())){
+                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")&&checker&&start.getItemCount()>0&&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())&&!dupname){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+"  "+namefield.getText();
@@ -474,6 +481,9 @@ public class Main extends JFrame {
                 }
                 else if(agefield.getText().equals("")&&e.getKeyCode()==KeyEvent.VK_ENTER){
                     JOptionPane.showMessageDialog(informationBox,"Please enter your age.","Error",JOptionPane.ERROR_MESSAGE);
+                }
+                else if(dupname&&e.getKeyCode()==KeyEvent.VK_ENTER){
+                    JOptionPane.showMessageDialog(informationBox, "This name had already booked time.Please enter a different name.");
                 }
             }
         });
@@ -506,6 +516,7 @@ public class Main extends JFrame {
         insert.addActionListener(new ActionListener(){
             String starttime,endtime;
             int index;
+            boolean dupname;
             public void actionPerformed(ActionEvent e){   
                 for(i=0 ;i<5;i++){
                     if(day[i].isSelected()){
@@ -521,10 +532,18 @@ public class Main extends JFrame {
                         break;
                     }else checker2 =false;
                 }
+                
+                dupname = false;
+                for(int i=0;i<plist.size();i++){
+                    if(plist.get(i).split(" ")[3].equals(namefield.getText())&&day[numberOfDay].getText().trim().equals(plist.get(i).split(" ")[0])){
+                        dupname = true;break;
+                    }
+                }
+                
                 /*
                  * So, we need to store the day which selected in somewhere around here to prepare record to the file.
                  */
-                if(!namefield.getText().equals("") && checker==true && checker2==true &&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())){
+                if(!namefield.getText().equals("") && checker==true && checker2==true &&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())&&!dupname){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+" "+namefield.getText();
@@ -549,6 +568,9 @@ public class Main extends JFrame {
                 }
                 else if(agefield.getText().equals("")){
                     JOptionPane.showMessageDialog(informationBox,"Please enter your age.","Error",JOptionPane.ERROR_MESSAGE);
+                }    
+                else if(dupname){
+                    JOptionPane.showMessageDialog(informationBox, "This name had already booked time.Please enter a different name.");
                 }
             }
         });
