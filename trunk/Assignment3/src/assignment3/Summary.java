@@ -6,6 +6,8 @@ package assignment3;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -23,17 +25,17 @@ public class Summary extends JFrame{
     
     private JLabel heading;
     private JComboBox day,doctor;
-    private JPanel Schedule,Desc,spd;
     private JButton gostartup;
     private Startup start;
     private String filename;
     private File file;
     private Scanner read;
-    private DefaultTableModel table;
+    private DefaultTableModel[] table;
     private JTable tb;
+    private int dayindex=0;
     private DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
     private String line;
-    String[] columnNames={"DAY","TIME-START","TIME-END","PATIENT","SEX","AGE"},word,weekdays= new String[]{"Monday","Tuesday","Wednesday","Thursday","Friday"};
+    String[] columnNames={"DAY","TIME-START","TIME-END","PATIENT","SEX","AGE"},word,weekdays= new String[]{"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"};
     
     public Summary(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,9 +65,11 @@ public class Summary extends JFrame{
        
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         
-        
-        table = new DefaultTableModel(columnNames,0);
-        tb = new JTable(table);
+        table = new DefaultTableModel[5];
+        for(int i=0;i<table.length;i++){
+            table[i] = new DefaultTableModel(columnNames,0);
+        }
+        tb = new JTable(table[0]);
         add(new JScrollPane(tb),"width 70%,center,wrap 20px");
         tb.setRowHeight(40);
         tb.setGridColor(Color.yellow);
@@ -89,12 +93,21 @@ public class Summary extends JFrame{
                 }else{
                     start.setVisible(true);
                 }
-                for(int i=table.getRowCount()-1;i>=0;i--){
-                    table.removeRow(i);
+                for(int j=0;j<table.length;j++){
+                    for(int i=table[j].getRowCount()-1;i>=0;i--){
+                        table[j].removeRow(i);
+                    }
                 }
                 Summary.this.dispose();
             }
     });
+        
+        day.addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent e){
+                dayindex = day.getSelectedIndex();
+                tb.setModel(table[dayindex]);
+            }
+        });
     }
     
     public void setStartup(Startup a){
@@ -104,7 +117,11 @@ public class Summary extends JFrame{
     public void setDoctor(String name){
         filename = name+".txt";
         heading.setText("Summary of Dr."+filename.substring(0,filename.length()-4)+" Schedule");
-        
+        readFile();
+        heading.validate();
+    }
+    
+    public void readFile(){
         if(file==null||!file.getName().equals(filename)){
             file = new File(filename);
         }
@@ -112,22 +129,27 @@ public class Summary extends JFrame{
         try {
             if(read==null||!read.equals(new Scanner(file)))
             {
-                System.out.println("Read");
                 read = new Scanner(file);
             }
             
             while(read.hasNext()){
                line = read.nextLine();
                word = line.split(" ");
-               table.addRow(word);
+               if(word[0].equals(weekdays[0])){
+                   table[0].addRow(word);
+               }
+               else if(word[0].equals(weekdays[1])){
+                   table[1].addRow(word);
+               }else if(word[0].equals(weekdays[2])){
+                   table[2].addRow(word);
+               }else if(word[0].equals(weekdays[3])){
+                   table[3].addRow(word);
+               }else{
+                   table[4].addRow(word);
+               }
             }
-            
-        } catch (FileNotFoundException ex) {
+            } catch (FileNotFoundException ex) {
             Logger.getLogger(Summary.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        heading.validate();
     }
-    
-    
 }
