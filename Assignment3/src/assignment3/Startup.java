@@ -145,13 +145,13 @@ import javax.swing.text.PlainDocument;
                 
                 else if(e.getKeyCode()==KeyEvent.VK_ENTER){
                     if(!name.getText().equals("")){
-                    if(new File("Schedule/"+name.getText()+".txt").exists()){
-                        JOptionPane.showMessageDialog(pstart,"This name already exist! Enter new name or choose name from the box.","Error",JOptionPane.ERROR_MESSAGE);
-                        name.setText("");
+                        if(new File("Schedule/"+name.getText()+".txt").exists()){
+                            JOptionPane.showMessageDialog(pstart,"This name already exist! Enter new name or choose name from the box.","Error",JOptionPane.ERROR_MESSAGE);
+                            name.setText("");
+                        }
                     }
-                    }else
-                    throwName();
-                    }
+                        throwName();
+                }
             }
         });        
         summary.addActionListener(new ActionListener(){
@@ -172,7 +172,8 @@ import javax.swing.text.PlainDocument;
     
     public void throwName(){
         if(name.getText().equals("")&&main==null){
-            main = new Main((String)combo.getSelectedItem());
+            if(combo.getItemCount()>0)
+                main = new Main((String)combo.getSelectedItem());
             //main.loadFile();
         }
         else if(main==null){

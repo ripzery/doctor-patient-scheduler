@@ -39,7 +39,7 @@ public class Summary extends JFrame{
     private DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
     private String line;
     private ArrayList<ArrayList<String>> row = new ArrayList<>();
-    String[] columnNames={"DAY","TIME-START","TIME-END","PATIENT","SEX","AGE"},word,weekdays= new String[]{"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"};
+    String[] columnNames={"DAY","TIME-START","TIME-END","PATIENT","BLOOD","SEX","AGE"},word,weekdays= new String[]{"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"};
     
     public Summary(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
