@@ -46,7 +46,7 @@ public class Summary extends JFrame{
         setBounds(320,70,800,600);
         getContentPane().setBackground(new Color(0x3e,0x60,0x6f));
         setVisible(true);
-        setLayout(new MigLayout("debug,fillx"));
+        setLayout(new MigLayout("fillx"));
         
         addComponent();
         addListener();

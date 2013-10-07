@@ -36,7 +36,7 @@ public class Main extends JFrame {
     private int width=800,height=600,numberOfDay;
     private String name,tname,name2;
     private String[] time,bloodlist,time2;
-    private JPanel TitleBar,allergyBox,informationBox,updateBox;
+    private JPanel TitleBar,DayBox,informationBox,updateBox;
     private JCheckBox[] day,sex;
     private JTextField namefield,agefield;
     private JComboBox start,end,blood;
@@ -108,7 +108,7 @@ public class Main extends JFrame {
     
     private void addDayBox(){
         Font f = new Font("Arial",Font.BOLD,24);   
-        allergyBox = new JPanel(new MigLayout());
+        DayBox = new JPanel(new MigLayout());
         day = new JCheckBox[5];
         day[0] = new JCheckBox("  MONDAY");day[0].setFont(f);day[0].setOpaque(false);
         day[1] = new JCheckBox("  TUESDAY");day[1].setFont(f);day[1].setOpaque(false);
@@ -127,20 +127,21 @@ public class Main extends JFrame {
         JLabel allergyTitle = new JLabel("Patient's day");
         allergyTitle.setFont(new Font("Arial",Font.CENTER_BASELINE,16));
         
-        allergyBox.add(allergyTitle,"wrap 30px,center");
-        allergyBox.add(day[0],"gapleft 3%,wrap 30px");
-        allergyBox.add(day[1],"gapleft 3%,wrap 30px");
-        allergyBox.add(day[2],"gapleft 3%,wrap 30px");
-        allergyBox.add(day[3],"gapleft 3%,wrap 30px");
-        allergyBox.add(day[4],"gapleft 3%,wrap 30px");
+        DayBox.add(allergyTitle,"wrap 30px,center");
+        DayBox.add(day[0],"gapleft 3%,wrap 30px");
+        DayBox.add(day[1],"gapleft 3%,wrap 30px");
+        DayBox.add(day[2],"gapleft 3%,wrap 30px");
+        DayBox.add(day[3],"gapleft 3%,wrap 30px");
+        DayBox.add(day[4],"gapleft 3%,wrap 30px");
         
-        allergyBox.setBackground(new Color(0x91,0xaa,0x9d));
+        DayBox.setBackground(new Color(0x91,0xaa,0x9d));
         
-        this.add(allergyBox,"gapleft 1%,id day");
+        this.add(DayBox,"gapleft 1%,id day");
     }
     
     private void addInformationBox(){
         informationBox = new JPanel(new MigLayout("fillx","[][grow][][grow]","nogrid"));
+        informationBox.setBackground(new Color(0x91,0xaa,0x9d));
         Font f = new Font("Arial",Font.BOLD,20);  
         JLabel patientName = new JLabel("Patient name : ");
         patientName.setFont(f);
@@ -168,8 +169,8 @@ public class Main extends JFrame {
         change = new JButton("Change doctor");
         
         sex = new JCheckBox[2];
-        sex[0] = new JCheckBox("  MALE");day[0].setFont(f);day[0].setOpaque(false);
-        sex[1] = new JCheckBox("  FEMALE");day[1].setFont(f);day[1].setOpaque(false);
+        sex[0] = new JCheckBox("  MALE");sex[0].setFont(new Font("Arial",Font.BOLD,12));sex[0].setOpaque(false);
+        sex[1] = new JCheckBox("  FEMALE");sex[1].setFont(new Font("Arial",Font.BOLD,12));sex[1].setOpaque(false);
         
         sexbg = new ButtonGroup();
         sexbg.add(sex[0]);
@@ -404,6 +405,7 @@ public class Main extends JFrame {
     private void addUpdateBox(){
         Font f = new Font("Arial",Font.BOLD,20);  
         updateBox = new JPanel(new MigLayout("fillx"));
+        updateBox.setBackground(new Color(0x91,0xaa,0x9d));
         JLabel heading = new JLabel("Patient Added");
         heading.setFont(f);
         updateBox.add(heading,"center,wrap 10px");
@@ -445,20 +447,18 @@ public class Main extends JFrame {
                 for(i=0 ;i<5;i++){
                     if(day[i].isSelected()){
                         checker = true;
-                        index = i;
                         break;
                     }else checker = false;                    
                 }
                 
-                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")&&checker==true&&start.getItemCount()>0&&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())){
+                if(e.getKeyCode()==KeyEvent.VK_ENTER&&!namefield.getText().equals("")&&checker&&start.getItemCount()>0&&!agefield.getText().equals("")&&(sex[0].isSelected()||sex[1].isSelected())){
                     starttime = (String)start.getSelectedItem();
                     endtime = (String)end.getSelectedItem();
                     name = starttime+" - "+endtime+"  "+namefield.getText();
                     tname = namefield.getText();
                     namefield.setText("");
-                    model[index].addElement(name);
-                    
-                    String pinfo = day[i].getText().trim()+" "+starttime+" "+endtime+" "+tname+" "+blood.getSelectedItem()+" "+sex[j].getText().trim()+" "+agefield.getText()+"\r\n";
+                    model[numberOfDay].addElement(name);
+                    String pinfo = day[numberOfDay].getText().trim()+" "+starttime+" "+endtime+" "+tname+" "+blood.getSelectedItem()+" "+sex[j].getText().trim()+" "+agefield.getText()+"\r\n";
                     plist.add(pinfo);
                     
                     removeChosenTime();
