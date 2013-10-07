@@ -324,7 +324,7 @@ public class Main extends JFrame {
     private void freeTime(ArrayList<String> update){
         String[] a;
         String TimeStart,TimeEnd;
-        int startcut=-2,endcut=-2,index=0;
+        int startcut=-2,endcut=-2;
         
         for(int i=0;i<update.size();i++){
             startcut=-2;
@@ -564,14 +564,9 @@ public class Main extends JFrame {
         
         change.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                bg.clearSelection();
-                sexbg.clearSelection();
-                agefield.setText("");
-                namefield.setText("");
-                st.setVisible(true);
-                initTime();
-                plist.clear();
-                Main.this.dispose();
+                String s = JOptionPane.showInputDialog(null, "Enter your new name");
+                if(s!=null)
+                setDoctorName(s);
             }
         });
         
