@@ -10,6 +10,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +37,7 @@ public class Summary extends JFrame{
     private int dayindex=0;
     private DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
     private String line;
+    private ArrayList<ArrayList<String>> row = new ArrayList<>();
     String[] columnNames={"DAY","TIME-START","TIME-END","PATIENT","SEX","AGE"},word,weekdays= new String[]{"MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY"};
     
     public Summary(){
@@ -93,11 +96,7 @@ public class Summary extends JFrame{
                 }else{
                     start.setVisible(true);
                 }
-                for(int j=0;j<table.length;j++){
-                    for(int i=table[j].getRowCount()-1;i>=0;i--){
-                        table[j].removeRow(i);
-                    }
-                }
+                removeRowAllTable();
                 Summary.this.dispose();
             }
     });
@@ -122,6 +121,10 @@ public class Summary extends JFrame{
     }
     
     public void readFile(){
+        row.clear();
+        for(int i=0;i<weekdays.length;i++){
+            row.add(new ArrayList<String>());
+        }
         if(file==null||!file.getName().equals(filename)){
             file = new File(filename);
         }
@@ -136,20 +139,64 @@ public class Summary extends JFrame{
                line = read.nextLine();
                word = line.split(" ");
                if(word[0].equals(weekdays[0])){
+                   row.get(0).add(line);
                    table[0].addRow(word);
                }
                else if(word[0].equals(weekdays[1])){
+                   row.get(1).add(line);
                    table[1].addRow(word);
                }else if(word[0].equals(weekdays[2])){
+                   row.get(2).add(line);
                    table[2].addRow(word);
                }else if(word[0].equals(weekdays[3])){
+                   row.get(3).add(line);
                    table[3].addRow(word);
                }else{
+                   row.get(4).add(line);
                    table[4].addRow(word);
                }
             }
             } catch (FileNotFoundException ex) {
             Logger.getLogger(Summary.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        sortTime();
+    }
+    
+    public void sortTime(){
+        ArrayList<String> time = new ArrayList<>();
+        ArrayList<String> sort = new ArrayList<>();
+        for(int j=0;j<table.length;j++){
+            
+            for(int i=0;i<table[j].getRowCount();i++){
+                time.add((String)table[j].getValueAt(i, 1));
+            }
+            
+            Collections.sort(time);
+            //while(sort.size()<row.get(j).size()){
+                for(int k=0;k<time.size();k++){
+                    for(int i=0;i<table[j].getRowCount();i++){
+                        if(time.get(k).equals(row.get(j).get(i).split(" ")[1])){
+                            sort.add(row.get(j).get(i));
+                        }
+                    }
+                }
+            //}
+            for(int i=table[j].getRowCount()-1;i>=0;i--){
+                table[j].removeRow(i);
+            }
+            for(int i=0;i<sort.size();i++){
+                table[j].addRow(sort.get(i).split(" "));
+            }
+            time.clear();
+            sort.clear();
+        }
+    }
+    
+    public void removeRowAllTable(){
+        for(int j=0;j<table.length;j++){
+            for(int i=table[j].getRowCount()-1;i>=0;i--){
+                table[j].removeRow(i);
+            }
         }
     }
 }
