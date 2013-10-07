@@ -50,6 +50,7 @@ public class Main extends JFrame {
     boolean checker = false,checker2 = false,checker3 = false;
     private Summary sum;
     private Startup st;
+    private JLabel title;
     int i = 0,j = 0;
     private ArrayList<String> plist = new ArrayList<>();
         
@@ -84,26 +85,23 @@ public class Main extends JFrame {
           startup = new Startup();
     }
     private void addComponent(){
-        
-        addTitleBar();
+        addTitleBar();       
         addDayBox();
         addInformationBox();
         addUpdateBox();
-        
     }
     
     private void addTitleBar(){
         Font f = new Font("Arial",Font.BOLD,36);        
         TitleBar = new JPanel();
         TitleBar.setLayout(new MigLayout());
-        JLabel title = new JLabel("Dr. "+name+" 's scheduler");
+        title = new JLabel("Dr. "+name+" 's scheduler");
         title.setFont(f);
         title.setForeground(new Color(0xd1,0xdb,0xbd));
         
         TitleBar.add(title,"gapleft 50px");
         TitleBar.setBackground(new Color(0xfc,0xff,0xf5));
         TitleBar.setOpaque(false);
-        
         this.add(TitleBar,"gapleft 20%,width 60%,gapright 20%,wrap 20px,id title");
     }
     
@@ -155,8 +153,14 @@ public class Main extends JFrame {
         initTime();
         start = new JComboBox(t1[0]);
         end = new JComboBox(t2[0]);
+        
+        JLabel textblood = new JLabel("Blood type : ");
+        textblood.setFont(f);
         bloodlist = new String[]{"A","B","AB","O"};
         blood = new JComboBox(bloodlist);
+        blood.setFont(f);
+        
+        
         insert = new JButton("Insert");
         clear = new JButton("Clear");
         finish = new JButton("Finish");
@@ -173,6 +177,7 @@ public class Main extends JFrame {
         JLabel lsex = new JLabel("Sex: ");
         JLabel lage = new JLabel("Age: ");
         agefield = new JTextField(2);
+        agefield.setFont(f);
         agefield.setDocument(new JTextFieldLimit(2));
         lage.setFont(f);
         lsex.setFont(f);        
@@ -185,7 +190,9 @@ public class Main extends JFrame {
         informationBox.add(end,",grow,wrap 30px");
         informationBox.add(lsex);
         informationBox.add(sex[0]);informationBox.add(sex[1]);
-        informationBox.add(lage);informationBox.add(agefield,"wrap 30px");
+        informationBox.add(lage,"gapx 20px");informationBox.add(agefield,"wrap 30px");
+        informationBox.add(textblood);
+        informationBox.add(blood,"wrap 30px");
         informationBox.add(insert,"grow");
         informationBox.add(clear,"grow");
         informationBox.add(finish,"grow");
@@ -450,7 +457,7 @@ public class Main extends JFrame {
                     namefield.setText("");
                     model[index].addElement(name);
                     
-                    String pinfo = day[i].getText().trim()+" "+starttime+" "+endtime+" "+tname+" "+sex[j].getText().trim()+" "+agefield.getText()+"\r\n";
+                    String pinfo = day[i].getText().trim()+" "+starttime+" "+endtime+" "+tname+" "+blood.getSelectedItem()+" "+sex[j].getText().trim()+" "+agefield.getText()+"\r\n";
                     plist.add(pinfo);
                     
                     removeChosenTime();
@@ -525,7 +532,7 @@ public class Main extends JFrame {
                     model[index].addElement(name);
                     
                     
-                    String pinfo = day[i].getText().trim()+" "+starttime+" "+endtime+" "+tname+" "+sex[j].getText().trim()+" "+agefield.getText()+"\r\n";
+                    String pinfo = day[i].getText().trim()+" "+starttime+" "+endtime+" "+tname+" "+blood.getSelectedItem()+" "+sex[j].getText().trim()+" "+agefield.getText()+"\r\n";
                     plist.add(pinfo);
                     
                     /*
@@ -551,6 +558,17 @@ public class Main extends JFrame {
                 sexbg.clearSelection();
                 agefield.setText("");
                 namefield.setText("");
+            }
+        });
+        
+        change.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                bg.clearSelection();
+                sexbg.clearSelection();
+                agefield.setText("");
+                namefield.setText("");
+                st.setVisible(true);
+                Main.this.dispose();
             }
         });
         
@@ -661,6 +679,9 @@ public class Main extends JFrame {
       name = s;
       name2 = s;
       setTitle("Doctor "+name+" 's scheduler");
+      if(title!=null){
+          title.setText("Dr. "+name+" 's scheduler");
+      }
       startup.dispose();
     }
     

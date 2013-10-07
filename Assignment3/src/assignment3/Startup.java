@@ -115,11 +115,13 @@ import javax.swing.text.PlainDocument;
         go.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                if(name.getText().equals("")){
-                    JOptionPane.showMessageDialog(pstart,"Please enter/choose your name !","Error",JOptionPane.ERROR_MESSAGE);                    
-                }
-                
-                else throwName();
+                if(!name.getText().equals("")){
+                    if(new File("Schedule/"+name.getText()+".txt").exists()){
+                        JOptionPane.showMessageDialog(pstart,"This name already exist! Enter new name or choose name from the box.","Error",JOptionPane.ERROR_MESSAGE);
+                        name.setText("");
+                    }
+                }else
+                throwName();
             }
         });
         name.addKeyListener(new KeyAdapter(){
@@ -142,8 +144,14 @@ import javax.swing.text.PlainDocument;
                }
                 
                 else if(e.getKeyCode()==KeyEvent.VK_ENTER){
+                    if(!name.getText().equals("")){
+                    if(new File("Schedule/"+name.getText()+".txt").exists()){
+                        JOptionPane.showMessageDialog(pstart,"This name already exist! Enter new name or choose name from the box.","Error",JOptionPane.ERROR_MESSAGE);
+                        name.setText("");
+                    }
+                    }else
                     throwName();
-                }
+                    }
             }
         });        
         summary.addActionListener(new ActionListener(){
@@ -163,18 +171,25 @@ import javax.swing.text.PlainDocument;
     }
     
     public void throwName(){
-        if(main==null){
+        if(name.getText().equals("")&&main==null){
+            main = new Main((String)combo.getSelectedItem());
+        }
+        else if(main==null){
             main = new Main(name.getText());
         }
         else{
             main.setVisible(true);
+            if(name.getText().equals(""))
+                main.setDoctorName((String)combo.getSelectedItem());
+            else
+                main.setDoctorName(name.getText());
         }
             main.setSummary(sum);
             main.setStartUp(this);
             this.dispose();
    }
    // Use to limit number of character in JTextFields
-   public class JTextFieldLimit extends PlainDocument {
+    public class JTextFieldLimit extends PlainDocument {
         private int limit;
 
             JTextFieldLimit(int limit) {
