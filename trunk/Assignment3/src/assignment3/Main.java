@@ -556,7 +556,6 @@ public class Main extends JFrame {
         
         finish.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                
                 File log = new File(name2+".txt");
                 try{
                     FileWriter writer = new FileWriter(log,true);
@@ -564,13 +563,12 @@ public class Main extends JFrame {
                     Iterator<String> iter  = plist.iterator();
                     while(iter.hasNext()){
                         buffer.write(iter.next());  
-                        System.out.print("Write");
                     }
                     buffer.close();  
                     
                       
                     }
-                catch (IOException ex){System.out.print("ex");}
+                catch (IOException ex){System.err.print("ex");}
                 
                 if(sum==null){
                     sum = new Summary();
@@ -578,7 +576,7 @@ public class Main extends JFrame {
                     sum.setVisible(true);
                 }
                 sum.setStartup(st);
-                sum.setDoctor(name);
+                sum.setDoctor(name2);
                 Main.this.dispose();
             }
     });
