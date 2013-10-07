@@ -70,7 +70,11 @@ import javax.swing.text.PlainDocument;
         go = new JButton("GO!");
         
         alldoctors = new ArrayList<>();
-        folder = new File(System.getProperty("user.dir"));
+        if(new File(System.getProperty("user.dir")+"/Schedule").mkdir()){
+            JOptionPane.showMessageDialog(null, "the Schedule folder has been created successfully!");
+        }
+            folder = new File(System.getProperty("user.dir")+"/Schedule");
+        
         listoffiles = folder.listFiles();
         for(int i=0;i<listoffiles.length;i++){
            if(listoffiles[i].isFile()){

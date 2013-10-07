@@ -141,7 +141,7 @@ public class Summary extends JFrame{
             row.add(new ArrayList<String>());
         }
         if(file==null||!file.getName().equals(filename)){
-            file = new File(filename);
+            file = new File("Schedule/"+filename);
         }
         
         try {

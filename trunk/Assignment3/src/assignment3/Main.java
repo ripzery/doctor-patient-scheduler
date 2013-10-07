@@ -556,7 +556,7 @@ public class Main extends JFrame {
         
         finish.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                File log = new File(name2+".txt");
+                File log = new File("Schedule/",name2+".txt");
                 try{
                     FileWriter writer = new FileWriter(log,true);
                     BufferedWriter buffer = new BufferedWriter(writer);
