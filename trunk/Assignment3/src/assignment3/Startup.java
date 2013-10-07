@@ -115,13 +115,14 @@ import javax.swing.text.PlainDocument;
         go.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                if(name.getText().equals("")){
+                if(!name.getText().equals("")){
                     if(new File("Schedule/"+name.getText()+".txt").exists()){
                         JOptionPane.showMessageDialog(pstart,"This name already exist! Enter new name or choose name from the box.","Error",JOptionPane.ERROR_MESSAGE);
                         name.setText("");
+                    }else{
+                    throwName();
                     }
-                }else
-                throwName();
+                }
             }
         });
         name.addKeyListener(new KeyAdapter(){
@@ -148,20 +149,15 @@ import javax.swing.text.PlainDocument;
                         if(new File("Schedule/"+name.getText()+".txt").exists()){
                             JOptionPane.showMessageDialog(pstart,"This name already exist! Enter new name or choose name from the box.","Error",JOptionPane.ERROR_MESSAGE);
                             name.setText("");
-                        }
+                        }else
+                            throwName();
                     }
-                        throwName();
                 }
             }
         });        
         summary.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                if(sum==null){
                     sum = new Summary();
-                    
-                }else{
-                    sum.setVisible(true);
-                }
                     sum.setDoctor((String)combo.getSelectedItem());
                     sum.setStartup(Startup.this);
                     Startup.this.dispose();
@@ -171,28 +167,16 @@ import javax.swing.text.PlainDocument;
     }
     
     public void throwName(){
-        if(name.getText().equals("")&&main==null){
+        if(name.getText().equals("")){
             if(combo.getItemCount()>0){
               main = new Main((String)combo.getSelectedItem());
               main.setLoad(true);
-              main.loadFile();
+              //main.loadFile();
             }  
         }
-        else if(main==null){
+        else{
             main = new Main(name.getText());
             main.setLoad(false);
-        }
-        else{
-            main.setVisible(true);
-            if(name.getText().equals("")){
-                main.setDoctorName((String)combo.getSelectedItem());
-                main.setLoad(true);
-                main.loadFile();
-            }
-            else{
-                main.setDoctorName(name.getText());
-                main.setLoad(false);
-            }
         }
             main.setSummary(sum);
             main.setStartUp(this);

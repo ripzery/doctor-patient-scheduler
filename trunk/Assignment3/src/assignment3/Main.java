@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -591,8 +592,6 @@ public class Main extends JFrame {
                 }
                 sum.setStartup(st);
                 sum.setDoctor(name2);
-                initTime();
-                plist.clear();
                 Main.this.dispose();
             }
     });
@@ -695,7 +694,33 @@ public class Main extends JFrame {
     }
     
     public void loadFile(){
-        
+       String line;
+       File read = new File(System.getProperty("user.dir")+name2+".txt");
+        try {
+            Scanner input = new Scanner(read);
+            while(input.hasNext()){
+                line = input.nextLine();
+                switch(line.split(" ")[0]){
+                    case "MONDAY":
+                        model[0].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
+                        break;
+                    case "TUESDAY":
+                        model[1].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
+                        break;
+                    case "WEDNESDAY":
+                        model[2].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
+                        break;
+                    case "THURSDAY":
+                        model[3].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
+                        break;
+                    case "FRIDAY":
+                        model[4].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
+                        break;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     // Use to limit number of character in JTextFields
    public class JTextFieldLimit extends PlainDocument {
