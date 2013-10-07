@@ -115,7 +115,7 @@ import javax.swing.text.PlainDocument;
         go.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                if(!name.getText().equals("")){
+                if(name.getText().equals("")){
                     if(new File("Schedule/"+name.getText()+".txt").exists()){
                         JOptionPane.showMessageDialog(pstart,"This name already exist! Enter new name or choose name from the box.","Error",JOptionPane.ERROR_MESSAGE);
                         name.setText("");
@@ -172,22 +172,27 @@ import javax.swing.text.PlainDocument;
     
     public void throwName(){
         if(name.getText().equals("")&&main==null){
-            if(combo.getItemCount()>0)
-                main = new Main((String)combo.getSelectedItem());
-            //main.loadFile();
+            if(combo.getItemCount()>0){
+              main = new Main((String)combo.getSelectedItem());
+              main.setLoad(true);
+              main.loadFile();
+            }  
         }
         else if(main==null){
             main = new Main(name.getText());
-            
+            main.setLoad(false);
         }
         else{
             main.setVisible(true);
             if(name.getText().equals("")){
                 main.setDoctorName((String)combo.getSelectedItem());
-                //main.loadFile();
+                main.setLoad(true);
+                main.loadFile();
             }
-            else
+            else{
                 main.setDoctorName(name.getText());
+                main.setLoad(false);
+            }
         }
             main.setSummary(sum);
             main.setStartUp(this);
