@@ -51,6 +51,7 @@ public class Main extends JFrame {
     private Summary sum;
     private Startup st;
     private JLabel title;
+    private Boolean isload = false;
     int i = 0,j = 0;
     private ArrayList<String> plist = new ArrayList<>();
         
@@ -568,6 +569,8 @@ public class Main extends JFrame {
                 agefield.setText("");
                 namefield.setText("");
                 st.setVisible(true);
+                initTime();
+                plist.clear();
                 Main.this.dispose();
             }
         });
@@ -583,8 +586,6 @@ public class Main extends JFrame {
                         buffer.write(iter.next());  
                     }
                     buffer.close();  
-                    
-                      
                     }
                 catch (IOException ex){System.err.print("ex");}
                 
@@ -595,6 +596,8 @@ public class Main extends JFrame {
                 }
                 sum.setStartup(st);
                 sum.setDoctor(name2);
+                initTime();
+                plist.clear();
                 Main.this.dispose();
             }
     });
@@ -609,7 +612,6 @@ public class Main extends JFrame {
                 }
         });
         }
-        
         remove.addActionListener(new ActionListener(){
             int index=0;
             public void actionPerformed(ActionEvent e){
@@ -693,6 +695,13 @@ public class Main extends JFrame {
         st = start;
     }
     
+    public void setLoad(boolean b){
+        isload = b;
+    }
+    
+    public void loadFile(){
+        
+    }
     // Use to limit number of character in JTextFields
    public class JTextFieldLimit extends PlainDocument {
         private int limit;
