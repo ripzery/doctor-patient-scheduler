@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package assignment3;
-
 
 import net.miginfocom.swing.MigLayout;
 import java.awt.*;
@@ -64,8 +59,8 @@ import javax.swing.text.PlainDocument;
     private void addComponents(){
         name = new JTextField();
         name.setDocument(new JTextFieldLimit(10));
-        entername = new JLabel("Enter your name: ");
-        choosename = new JLabel("Choose exists name:");
+        entername = new JLabel("Enter your name : ");
+        choosename = new JLabel("View the summary : ");
         heading = new JLabel("Doctor-Patients Scheduler");
         go = new JButton("GO!");
         
@@ -102,13 +97,13 @@ import javax.swing.text.PlainDocument;
         summary = new JButton("Go to Summary");
         summary.setFont(f);
         
-        background.add(heading,"gapright 80px,right,wrap 70px");
-        background.add(entername,"gapright 180px,right,wrap 10px");
-        background.add(name,"gapright 60px,right, width 40%,wrap 40px");
-        background.add(choosename,"gapleft 54%,id entername,wrap 30px");
-        background.add(combo,"gapleft 60%");              
-        background.add(go,"pos 420px 440px");
-        background.add(summary,"pos 520px 440px");
+        background.add(heading,"gapleft 52%,wrap 70px");
+        background.add(entername,"gapleft 52%,wrap 10px");
+        background.add(name,"gapleft 52%, width 40%,wrap 20px");
+        background.add(go,"gapleft 52%,wrap 40px");
+        background.add(choosename,"gapleft 52%,id entername,wrap 30px");
+        background.add(combo,"gapleft 52%,wrap 20px");              
+        background.add(summary,"gapleft 52%");
     }
     
     private void addListener(){
@@ -122,6 +117,8 @@ import javax.swing.text.PlainDocument;
                     }else{
                     throwName();
                     }
+                }else{
+                    JOptionPane.showMessageDialog(pstart, "Please Enter name","Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -163,21 +160,10 @@ import javax.swing.text.PlainDocument;
                     Startup.this.dispose();
             }
         });
-        
     }
     
     public void throwName(){
-        if(name.getText().equals("")){
-            if(combo.getItemCount()>0){
-              main = new Main((String)combo.getSelectedItem());
-              main.setLoad(true);
-              //main.loadFile();
-            }  
-        }
-        else{
             main = new Main(name.getText());
-            main.setLoad(false);
-        }
             main.setSummary(sum);
             main.setStartUp(this);
             this.dispose();
@@ -191,8 +177,7 @@ import javax.swing.text.PlainDocument;
              this.limit = limit;
              }
 
-        public void insertString( int offset, String  str, AttributeSet attr ) throws BadLocationException {
-            
+        public void insertString( int offset, String  str, AttributeSet attr ) throws BadLocationException {  
             if (str == null) return;
             if ((getLength() + str.length()) <= limit) {
               super.insertString(offset, str, attr);

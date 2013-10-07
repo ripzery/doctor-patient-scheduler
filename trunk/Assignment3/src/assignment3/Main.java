@@ -52,7 +52,6 @@ public class Main extends JFrame {
     private Summary sum;
     private Startup st;
     private JLabel title;
-    private Boolean isload = false;
     int i = 0,j = 0;
     private ArrayList<String> plist = new ArrayList<>();
         
@@ -710,39 +709,6 @@ public class Main extends JFrame {
         st = start;
     }
     
-    public void setLoad(boolean b){
-        isload = b;
-    }
-    
-    public void loadFile(){
-       String line;
-       File read = new File(System.getProperty("user.dir")+name2+".txt");
-        try {
-            Scanner input = new Scanner(read);
-            while(input.hasNext()){
-                line = input.nextLine();
-                switch(line.split(" ")[0]){
-                    case "MONDAY":
-                        model[0].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
-                        break;
-                    case "TUESDAY":
-                        model[1].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
-                        break;
-                    case "WEDNESDAY":
-                        model[2].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
-                        break;
-                    case "THURSDAY":
-                        model[3].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
-                        break;
-                    case "FRIDAY":
-                        model[4].addElement(line.split(" ")[1]+" - "+line.split(" ")[2]+" "+line.split(" ")[3]);
-                        break;
-                }
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     // Use to limit number of character in JTextFields
    public class JTextFieldLimit extends PlainDocument {
         private int limit;
