@@ -173,14 +173,18 @@ import javax.swing.text.PlainDocument;
     public void throwName(){
         if(name.getText().equals("")&&main==null){
             main = new Main((String)combo.getSelectedItem());
+            //main.loadFile();
         }
         else if(main==null){
             main = new Main(name.getText());
+            
         }
         else{
             main.setVisible(true);
-            if(name.getText().equals(""))
+            if(name.getText().equals("")){
                 main.setDoctorName((String)combo.getSelectedItem());
+                //main.loadFile();
+            }
             else
                 main.setDoctorName(name.getText());
         }
