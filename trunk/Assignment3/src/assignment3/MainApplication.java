@@ -118,7 +118,7 @@ public class MainApplication extends JFrame {
     
     private void addDayBox(){
         Font f = new Font("Arial",Font.BOLD,24);   
-        DayBox = new JPanel(new MigLayout());
+        DayBox = new JPanel(new MigLayout("fillx,filly"));
         day = new JCheckBox[5];
         day[0] = new JCheckBox("  MONDAY");day[0].setFont(f);day[0].setOpaque(false);
         day[1] = new JCheckBox("  TUESDAY");day[1].setFont(f);day[1].setOpaque(false);
@@ -134,8 +134,8 @@ public class MainApplication extends JFrame {
         bg.add(day[4]);
         
         
-        JLabel allergyTitle = new JLabel("Patient's day");
-        allergyTitle.setFont(new Font("Arial",Font.CENTER_BASELINE,16));
+        JLabel allergyTitle = new JLabel("Appointment date");
+        allergyTitle.setFont(new Font("Arial",Font.BOLD,26));
         
         DayBox.add(allergyTitle,"wrap 30px,center");
         DayBox.add(day[0],"gapleft 3%,wrap 30px");
@@ -146,11 +146,11 @@ public class MainApplication extends JFrame {
         
         DayBox.setBackground(new Color(0x91,0xaa,0x9d));
         
-        this.add(DayBox,"gapleft 1%,id day");
+        this.add(DayBox,"gapleft 1%,height 400px,id day");
     }
     
     private void addInformationBox(){
-        informationBox = new JPanel(new MigLayout("fillx","[][grow][][grow]","nogrid"));
+        informationBox = new JPanel(new MigLayout("fillx,filly","[][grow][][grow]","nogrid"));
         informationBox.setBackground(new Color(0x91,0xaa,0x9d));
         Font f = new Font("Arial",Font.BOLD,20);  
         JLabel patientName = new JLabel("Patient name : ");
@@ -174,9 +174,13 @@ public class MainApplication extends JFrame {
         
         
         insert = new JButton("Insert");
+        insert.setFont(f);
         clear = new JButton("Clear");
+        clear.setFont(f);
         finish = new JButton("Finish");
+        finish.setFont(f);
         change = new JButton("Change doctor");
+        change.setFont(f);
         
         sex = new JCheckBox[2];
         sex[0] = new JCheckBox("  MALE");sex[0].setFont(new Font("Arial",Font.BOLD,12));sex[0].setOpaque(false);
@@ -205,10 +209,10 @@ public class MainApplication extends JFrame {
         informationBox.add(lage,"gapx 20px");informationBox.add(agefield,"wrap 30px");
         informationBox.add(textblood);
         informationBox.add(blood,"wrap 30px");
-        informationBox.add(insert,"grow");
-        informationBox.add(clear,"grow");
-        informationBox.add(finish,"grow");
-        informationBox.add(change,"grow");
+        informationBox.add(insert,"width 33%");
+        informationBox.add(clear,"width 33%");
+        informationBox.add(finish,"width 33%,wrap 20px");
+        informationBox.add(change,"center");
         
         this.add(informationBox,"pos day.x2+10 day.y 550 day.y2,id information");
     }
@@ -416,7 +420,7 @@ public class MainApplication extends JFrame {
         Font f = new Font("Arial",Font.BOLD,20);  
         updateBox = new JPanel(new MigLayout("fillx"));
         updateBox.setBackground(new Color(0x91,0xaa,0x9d));
-        JLabel heading = new JLabel("Patient Added");
+        JLabel heading = new JLabel("Patients Booked");
         heading.setFont(f);
         updateBox.add(heading,"center,wrap 10px");
         
@@ -645,18 +649,15 @@ public class MainApplication extends JFrame {
                     for(int i=patientList.getSelectedIndices().length-1;i>=0;i--){
                         index = patientList.getSelectedIndices()[i];
                         startMeetingDay.get(numberOfDay).remove(index);
-                        System.out.println(plist.size());
                         for(int j=0;j<plist.size();j++){
                             if(model[numberOfDay].getElementAt(index).toString().split(" ")[0].equals(plist.get(j).split(" ")[1])){
                                 if(plist.get(j).split(" ")[0].trim().equals(day[numberOfDay].getText().trim())){
-                                    System.out.println("Remove!");
                                     plist.remove(j);
                                     break;
                                 }
                             }
                         }
                         model[numberOfDay].removeElementAt(index);
-                        System.out.println("End round");
                     }
                 }
             }
