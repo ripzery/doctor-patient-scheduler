@@ -25,7 +25,7 @@ import javax.swing.text.PlainDocument;
     private Summary sum;
     private JComboBox combo;
     private JTextField name;
-    private Main main;
+    private MainApplication main;
     private JLabel background;
     private File folder;
     private File[] listoffiles;
@@ -35,7 +35,8 @@ import javax.swing.text.PlainDocument;
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
         setLocation(320,70);
-        setSize(800,600);  
+        setSize(800,600);
+        setResizable(false);
 
         setLayout(new BorderLayout());
        // pstart.setBackground(new Color(0x3e,0x60,0x6f));
@@ -62,7 +63,7 @@ import javax.swing.text.PlainDocument;
         entername = new JLabel("Enter your name : ");
         choosename = new JLabel("View the summary : ");
         heading = new JLabel("Doctor-Patients Scheduler");
-        go = new JButton("GO!");
+        go = new JButton("Make an appointment");
         
         alldoctors = new ArrayList<>();
         if(new File(System.getProperty("user.dir")+"/Schedule").mkdir()){
@@ -89,7 +90,7 @@ import javax.swing.text.PlainDocument;
         combo.setFont(new Font("Arial",Font.BOLD,20));  
         
         Font f = new Font("Arial",Font.BOLD,23);  
-        heading.setFont(f);
+        heading.setFont(new Font("Arial",Font.BOLD,36));
         choosename.setFont(f);
         entername.setFont(f);
         go.setFont(f);
@@ -97,7 +98,7 @@ import javax.swing.text.PlainDocument;
         summary = new JButton("Go to Summary");
         summary.setFont(f);
         
-        background.add(heading,"gapleft 52%,wrap 70px");
+        background.add(heading,"gapleft 40%,wrap 70px");
         background.add(entername,"gapleft 52%,wrap 10px");
         background.add(name,"gapleft 52%, width 40%,wrap 20px");
         background.add(go,"gapleft 52%,wrap 40px");
@@ -112,7 +113,7 @@ import javax.swing.text.PlainDocument;
             public void actionPerformed(ActionEvent e){
                 if(!name.getText().equals("")){
                     if(new File("Schedule/"+name.getText()+".txt").exists()){
-                        JOptionPane.showMessageDialog(pstart,"This name already exist! Enter new name or choose name from the box.","Error",JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(pstart,"This name already exist!Please enter new name.","Error",JOptionPane.ERROR_MESSAGE);
                         name.setText("");
                     }else{
                     throwName();
@@ -163,7 +164,7 @@ import javax.swing.text.PlainDocument;
     }
     
     public void throwName(){
-            main = new Main(name.getText());
+            main = new MainApplication(name.getText());
             main.setSummary(sum);
             main.setStartUp(this);
             this.dispose();

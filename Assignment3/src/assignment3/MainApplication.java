@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.event.CaretEvent;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -31,7 +32,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Kunanont
  */
-public class Main extends JFrame {
+public class MainApplication extends JFrame {
     
     private static Startup startup;
     private int width=800,height=600,numberOfDay;
@@ -55,7 +56,7 @@ public class Main extends JFrame {
     int i = 0,j = 0;
     private ArrayList<String> plist = new ArrayList<>();
         
-    public Main(String name){        
+    public MainApplication(String name){        
         this.setDoctorName(name);
         this.setLayout(new MigLayout());
         
@@ -64,6 +65,7 @@ public class Main extends JFrame {
         
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBounds(320,70,width,height);
+        this.setResizable(false);
         
         getContentPane().setBackground(new Color(0x3e,0x60,0x6f));
         
@@ -81,8 +83,17 @@ public class Main extends JFrame {
         setVisible(true);
     }
     
-    public static void main(String args[]){       
-          startup = new Startup();
+    public static void main(String args[]){
+          try{
+              for(LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()){
+                  if("Nimbus".equals(info.getName())){
+                      UIManager.setLookAndFeel(info.getClassName());
+                      break;
+                  }
+              }
+          }
+          catch(Exception e){}
+            startup = new Startup();
     }
     private void addComponent(){
         addTitleBar();       
@@ -146,7 +157,7 @@ public class Main extends JFrame {
         patientName.setFont(f);
         namefield = new JTextField(30);
         namefield.setFont(f);
-        namefield.setDocument(new JTextFieldLimit(20));
+        namefield.setDocument(new MainApplication.JTextFieldLimit(20));
         JLabel choosetimefrom = new JLabel("Choose time : ");
         choosetimefrom.setFont(f);
         JLabel choosetimeto = new JLabel(" to");
@@ -179,7 +190,7 @@ public class Main extends JFrame {
         JLabel lage = new JLabel("Age: ");
         agefield = new JTextField(2);
         agefield.setFont(f);
-        agefield.setDocument(new JTextFieldLimit(2));
+        agefield.setDocument(new MainApplication.JTextFieldLimit(2));
         lage.setFont(f);
         lsex.setFont(f);        
         
@@ -612,7 +623,7 @@ public class Main extends JFrame {
                 }
                 sum.setStartup(st);
                 sum.setDoctor(name2);
-                Main.this.dispose();
+                MainApplication.this.dispose();
             }
     });
         
@@ -632,8 +643,20 @@ public class Main extends JFrame {
                 if(!patientList.isSelectionEmpty()){
                     freeTime((ArrayList<String>)patientList.getSelectedValuesList());
                     for(int i=patientList.getSelectedIndices().length-1;i>=0;i--){
-                        startMeetingDay.get(numberOfDay).remove(patientList.getSelectedIndices()[i]);
-                        model[numberOfDay].removeElementAt(patientList.getSelectedIndices()[i]);
+                        index = patientList.getSelectedIndices()[i];
+                        startMeetingDay.get(numberOfDay).remove(index);
+                        System.out.println(plist.size());
+                        for(int j=0;j<plist.size();j++){
+                            if(model[numberOfDay].getElementAt(index).toString().split(" ")[0].equals(plist.get(j).split(" ")[1])){
+                                if(plist.get(j).split(" ")[0].trim().equals(day[numberOfDay].getText().trim())){
+                                    System.out.println("Remove!");
+                                    plist.remove(j);
+                                    break;
+                                }
+                            }
+                        }
+                        model[numberOfDay].removeElementAt(index);
+                        System.out.println("End round");
                     }
                 }
             }
@@ -708,7 +731,6 @@ public class Main extends JFrame {
     public void setStartUp(Startup start){
         st = start;
     }
-    
     // Use to limit number of character in JTextFields
    public class JTextFieldLimit extends PlainDocument {
         private int limit;
